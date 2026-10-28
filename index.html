@@ -793,7 +793,7 @@
                         <textarea id="finalReflectionText" rows="3" class="w-full bg-navy-950 border border-navy-700 rounded p-3 text-xs text-beige-100 focus:outline-none focus:border-gold-500" placeholder="Tuliskan refleksi peribadi anda tentang bagaimana Hadis ini mengubah pendekatan anda dalam kehidupan seharian..."></textarea>
                     </div>
 
-                    <!-- Action Buttons: Google Form & Print Export -->
+                    <!-- Action Buttons: Print Export -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                         
                         <!-- Print PDF Report Button -->
@@ -823,44 +823,6 @@
 
     </main>
 
-            <!-- Configuration / Link Setup Box -->
-            <div class="bg-navy-950 p-4 rounded border border-navy-700 space-y-3">
-                <label class="block text-xs font-bold text-gold-400 uppercase">
-                    🔗 Tetapan Link Google Form (Untuk Guru / Tenaga Pengajar):
-                </label>
-                <div class="flex gap-2">
-                    <input type="text" id="googleFormUrlInput" class="flex-grow bg-navy-900 border border-navy-700 rounded px-3 py-2 text-xs text-beige-100 focus:outline-none focus:border-gold-500" placeholder="Tampal URL Google Form anda di sini (cth: https://forms.gle/...)">
-                    <button onclick="saveGoogleFormUrl()" class="bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs px-4 py-2 rounded shrink-0">
-                        Simpan Link
-                    </button>
-                </div>
-                <p class="text-[11px] text-beige-400 italic">
-                    *Nota: Masukkan pautan Google Form anda supaya jawapan dan penilaian pelajar terus direkodkan ke dalam sistem pensyarah.
-                </p>
-            </div>
-
-            <!-- Embedded Frame / Form Display Area -->
-            <div id="googleFormContainer" class="min-h-[300px] border border-navy-700 rounded bg-navy-950 flex flex-col items-center justify-center p-6 text-center space-y-4">
-                <i class="fa-solid fa-paper-plane text-4xl text-gold-400/40"></i>
-                <div>
-                    <h4 class="font-bold text-sm text-gold-300">Pautan Google Form Belum Ditetapkan</h4>
-                    <p class="text-xs text-beige-400 max-w-md mx-auto mt-1">
-                        Sila tampal pautan Google Form anda di petak atas atau klik butang di bawah untuk membuka borang dalam tetingkap baharu.
-                    </p>
-                </div>
-                <a id="directGoogleFormBtn" href="#" target="_blank" class="hidden bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-6 py-2.5 rounded border border-emerald-500">
-                    Buka Google Form Di Tab Baharu <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
-                </a>
-            </div>
-
-            <div class="text-right pt-2 border-t border-navy-800">
-                <button onclick="closeGoogleFormModal()" class="bg-navy-800 hover:bg-navy-700 text-beige-200 text-xs px-5 py-2 rounded border border-navy-600">
-                    Tutup
-                </button>
-            </div>
-
-        </div>
-    </div>
 
     <!-- ================= QUESTION & CASE BUILDER MODAL ================= -->
     <div id="questionBuilderModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
