@@ -795,6 +795,15 @@
 
                     <!-- Action Buttons: Print Export -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+
+                    <!-- Butang Auto-Hantar Rekod Siasatan -->
+                    <button id="btnSubmitRecord" onclick="sendDataToGoogleSheet()" class="w-full bg-navy-900 hover:bg-navy-800 text-gold-400 p-4 rounded-md border border-gold-500/40 flex items-center justify-center gap-3 transition shadow">
+                        <i class="fa-solid fa-paper-plane text-lg text-gold-400"></i>
+                        <div class="text-left">
+                            <p class="font-bold text-xs">HANTAR REKOD SIASATAN</p>
+                            <p class="text-[10px] text-beige-300">Simpan nama & refleksi secara automatik ke fail pensyarah</p>
+                        </div>
+                    </button>
                         
                         <!-- Print PDF Report Button -->
                         <button onclick="generatePDFReport()" class="w-full bg-navy-900 hover:bg-navy-800 text-gold-400 p-4 rounded-md border border-gold-500/40 flex items-center justify-center gap-3 transition shadow">
@@ -1200,41 +1209,6 @@
             document.getElementById('evidenceModal').classList.add('hidden');
         }
 
-        // Google Form Modal Logic
-        function openGoogleFormModal() {
-            const container = document.getElementById('googleFormContainer');
-            const directBtn = document.getElementById('directGoogleFormBtn');
-            const urlInput = document.getElementById('googleFormUrlInput');
-
-            urlInput.value = googleFormUrl;
-
-            if(googleFormUrl && googleFormUrl.startsWith('http')) {
-                container.innerHTML = `<iframe src="${googleFormUrl}" class="w-full h-[400px] rounded border-0" frameborder="0" marginheight="0" marginwidth="0">Memuatkan borang...</iframe>`;
-                directBtn.href = googleFormUrl;
-                directBtn.classList.remove('hidden');
-            } else {
-                directBtn.classList.add('hidden');
-            }
-
-            document.getElementById('googleFormModal').classList.remove('hidden');
-            playSound('click');
-        }
-
-        function closeGoogleFormModal() {
-            document.getElementById('googleFormModal').classList.add('hidden');
-        }
-
-        function saveGoogleFormUrl() {
-            const val = document.getElementById('googleFormUrlInput').value.trim();
-            if(val) {
-                googleFormUrl = val;
-                localStorage.setItem('hd_google_form_url', val);
-                alert("Pautan Google Form berjaya disimpan!");
-                openGoogleFormModal();
-            } else {
-                alert("Sila masukkan pautan URL yang sah.");
-            }
-        }
 
         // Question Builder Modal Logic
         function openQuestionBuilderModal() {
@@ -1402,6 +1376,49 @@
         window.addEventListener('DOMContentLoaded', () => {
             selectCase(1);
         });
+        // Tampal Web App URL Apps Script anda di dalam pengikat ' ' ini:
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx6VKxTXR-D_EyTOh8uTgywq08sLABPhB6QVys-giZd7EOKlhBtxH0LXKTFFSqQpbuq/exec';
+
+        async function sendDataToGoogleSheet() {
+            const studentName = document.getElementById('studentNames').value;
+            const institution = document.getElementById('institutionCode').value;
+            const reflection = document.getElementById('finalReflectionText').value;
+            const caseTitle = casesData[selectedCaseId] ? casesData[selectedCaseId].title : "Kes " + selectedCaseId;
+
+            if (!studentName || studentName.trim() === "") {
+                alert("Sila masukkan Nama Kumpulan / Pelajar di Halaman 1 terlebih dahulu!");
+                navigateToPage(1);
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitRecord');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-gold-400"></i> <span class="text-xs font-bold">Sedang Menghantar Rekod...</span>';
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentName: studentName,
+                        institution: institution,
+                        caseTitle: caseTitle,
+                        reflection: reflection
+                    })
+                });
+
+                playSound('success');
+                alert("✅ Rekod siasatan anda berjaya dihantar ke Google Sheets pensyarah!");
+                btn.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-xs font-bold text-emerald-400">REKOD BERJAYA DIHANTAR</span>';
+                btn.className = "w-full bg-emerald-950 border border-emerald-500/50 p-4 rounded-md flex items-center justify-center gap-3";
+            } catch (error) {
+                playSound('stamp');
+                alert("❌ Gagal menghantar. Sila semak sambungan internet anda.");
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane text-lg text-gold-400"></i> <div class="text-left"><p class="font-bold text-xs">CUBA HANTAR LAGI</p></div>';
+            }
+        }
     </script>
 
 </body>
