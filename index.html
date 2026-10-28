@@ -114,11 +114,6 @@
             <!-- Global Action Controls -->
             <div class="flex items-center flex-wrap gap-2 text-xs">
                 
-                <!-- Google Form Link Integrator Button -->
-                <button onclick="openGoogleFormModal()" class="bg-emerald-800/80 hover:bg-emerald-700 text-emerald-100 px-3 py-1.5 rounded border border-emerald-500/50 flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-clipboard-list text-gold-400"></i>
-                    <span class="font-semibold">📋 Google Form / Rekod</span>
-                </button>
 
                 <!-- Question / Case Builder Button -->
                 <button onclick="openQuestionBuilderModal()" class="bg-navy-800 hover:bg-navy-700 text-gold-300 px-3 py-1.5 rounded border border-gold-500/40 flex items-center gap-1.5 transition">
@@ -801,15 +796,6 @@
                     <!-- Action Buttons: Google Form & Print Export -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                         
-                        <!-- Open Google Form Button -->
-                        <button onclick="openGoogleFormModal()" class="w-full bg-emerald-800 hover:bg-emerald-700 text-emerald-100 p-4 rounded-md border border-emerald-500 flex items-center justify-center gap-3 transition shadow">
-                            <i class="fa-solid fa-paper-plane text-lg text-gold-400"></i>
-                            <div class="text-left">
-                                <p class="font-bold text-xs">HANTAR REKOD KE GOOGLE FORM</p>
-                                <p class="text-[10px] text-emerald-200">Rakam jawapan & rekod markah pelajar ke Google Sheets</p>
-                            </div>
-                        </button>
-
                         <!-- Print PDF Report Button -->
                         <button onclick="generatePDFReport()" class="w-full bg-navy-900 hover:bg-navy-800 text-gold-400 p-4 rounded-md border border-gold-500/40 flex items-center justify-center gap-3 transition shadow">
                             <i class="fa-solid fa-file-pdf text-lg"></i>
@@ -836,20 +822,6 @@
         </section>
 
     </main>
-
-    <!-- ================= GOOGLE FORM INTEGRATION MODAL ================= -->
-    <div id="googleFormModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-navy-900 border-2 border-gold-500 rounded-lg max-w-3xl w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl relative">
-            
-            <div class="flex justify-between items-center border-b border-gold-500/30 pb-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-list text-gold-400 text-xl"></i>
-                    <h3 class="cinzel-font text-lg font-bold text-gold-400">INTEGRASI GOOGLE FORM & REKOD SIASATAN</h3>
-                </div>
-                <button onclick="closeGoogleFormModal()" class="text-beige-400 hover:text-white">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
 
             <!-- Configuration / Link Setup Box -->
             <div class="bg-navy-950 p-4 rounded border border-navy-700 space-y-3">
