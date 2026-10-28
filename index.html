@@ -121,12 +121,6 @@
                     <span class="font-semibold">➕ Pembina Soalan</span>
                 </button>
 
-                <!-- Canva Link Mode Toggle -->
-                <button id="canvaToggleBtn" onclick="toggleCanvaOverlay()" class="bg-navy-800 hover:bg-navy-700 text-beige-200 px-2.5 py-1.5 rounded border border-navy-700 flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-link text-blue-400"></i>
-                    <span id="canvaBtnLabel">🔗 Canva Tags (Off)</span>
-                </button>
-
                 <!-- Editable Content Mode -->
                 <button id="editToggleBtn" onclick="toggleEditMode()" class="bg-navy-800 hover:bg-navy-700 text-beige-200 px-2.5 py-1.5 rounded border border-navy-700 flex items-center gap-1.5 transition">
                     <i class="fa-solid fa-pen-to-square text-amber-400"></i>
@@ -138,14 +132,18 @@
                     <i id="audioIcon" class="fa-solid fa-volume-high text-gold-400"></i>
                 </button>
 
-                <!-- Language Switcher -->
-                <div class="bg-navy-950 border border-gold-500/30 rounded p-0.5 flex items-center">
-                    <button id="langMS" onclick="switchLanguage('ms')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-gold-500 text-navy-950">MY</button>
-                    <button id="langEN" onclick="switchLanguage('en')" class="px-2 py-0.5 text-[11px] font-bold rounded text-beige-300 hover:text-gold-400">EN</button>
-                </div>
-            </div>
-        </div>
-    </header>
+                <!-- Google Translate Widget -->
+                <div id="google_translate_element" class="text-xs"></div>
+                <script type="text/javascript">
+                  function googleTranslateElementInit() {
+                    new google.translate.TranslateElement({
+                      pageLanguage: 'MY',
+                      includedLanguages: 'MY,EN',
+                      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                    }, 'google_translate_element');
+                  }
+                </script>
+                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <!-- PAGE NAVIGATION BREADCRUMB INDICATOR -->
     <div class="bg-navy-900/80 border-b border-navy-800 py-1.5 px-4 text-center text-xs text-beige-400">
