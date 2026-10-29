@@ -121,11 +121,6 @@
                     <span class="font-semibold">➕ Pembina Soalan</span>
                 </button>
 
-                <!-- Editable Content Mode -->
-                <button id="editToggleBtn" onclick="toggleEditMode()" class="bg-navy-800 hover:bg-navy-700 text-beige-200 px-2.5 py-1.5 rounded border border-navy-700 flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-pen-to-square text-amber-400"></i>
-                    <span id="editBtnLabel">✏️ Sunting Teks</span>
-                </button>
 
                 <!-- Sound Toggle -->
                 <button onclick="toggleAudio()" class="bg-navy-800 hover:bg-navy-700 text-beige-200 px-2 py-1.5 rounded border border-navy-700 transition">
@@ -1359,6 +1354,7 @@
         // Initialize First Case Load
         window.addEventListener('DOMContentLoaded', () => {
             selectCase(1);
+            navigateToPage(1);
         });
 
         // Tampal Web App URL daripada Google Apps Script di dalam ' ' ini:
