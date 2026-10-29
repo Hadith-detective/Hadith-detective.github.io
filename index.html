@@ -224,7 +224,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-beige-100 p-4 rounded border border-beige-300 text-xs typewriter-font mb-8">
                     <div>
                         <label class="block text-slate-500 font-bold uppercase mb-1">Nama Kumpulan / Pelajar:</label>
-                        <input type="text" id="studentNames" value="Kumpulan Detektif Sunnah (Ahli: Najwa, Husna, Mira, Mawar)" class="w-full bg-transparent border-b border-slate-400 focus:outline-none focus:border-gold-600 text-navy-900 font-semibold" placeholder="Masukkan nama anda...">
+                        <input type="text" id="studentNames" value="Kumpulan Detektif Sunnah (Ahli: )" class="w-full bg-transparent border-b border-slate-400 focus:outline-none focus:border-gold-600 text-navy-900 font-semibold" placeholder="Masukkan nama anda...">
                     </div>
                     <div>
                         <label class="block text-slate-500 font-bold uppercase mb-1">Kod Kursus & Institusi:</label>
@@ -745,8 +745,6 @@
         <section id="page-8" class="page-screen hidden py-6">
             <div class="max-w-4xl mx-auto bg-beige-200 text-navy-950 p-6 md:p-10 rounded-lg paper-shadow border-4 border-navy-900 relative">
                 
-                <div class="canva-tag hidden absolute -top-3 -right-3 bg-blue-600 text-white font-mono text-xs px-3 py-1 rounded-full z-20">
-                    [Canva Link -> Page 8]
                 </div>
 
                 <!-- Header Stamp -->
@@ -1363,47 +1361,64 @@
             selectCase(1);
         });
 
-        // Google Script URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFBbnJp0UEzaEQukhX7Ddbp3fAoBJi5-I940lZzUDJd3uEhfRHCouIqMmmXOkXuDns/exec';
+        // Tampal Web App URL daripada Google Apps Script di dalam ' ' ini:
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOhs2fivkbzVm0ZkPU2-3lzcYhizMPKrfuT3-duxVtDW9jW8YeIjY1-hK5cdq8DYI8/exec';
 
         async function sendDataToGoogleSheet() {
-            const studentName = document.getElementById('studentNames').value;
-            const institution = document.getElementById('institutionCode').value;
-            const reflection = document.getElementById('finalReflectionText').value;
-            const caseTitle = casesData[selectedCaseId] ? casesData[selectedCaseId].title : "Kes " + selectedCaseId;
+            const btn = document.getElementById('btnSubmitRecord');
+    
+            // Semak kewujudan petak input
+            const nameInput = document.getElementById('studentNames');
+            const instInput = document.getElementById('institutionCode');
+            const reflInput = document.getElementById('finalReflectionText');
 
-            if (!studentName || studentName.trim() === "") {
-                alert("Sila masukkan Nama Kumpulan / Pelajar di Halaman 1 terlebih dahulu!");
+            const studentName = nameInput ? nameInput.value.trim() : '';
+            const institution = instInput ? instInput.value.trim() : '-';
+            const reflection = reflInput ? reflInput.value.trim() : '';
+            const caseTitle = (typeof casesData !== 'undefined' && typeof selectedCaseId !== 'undefined' && casesData[selectedCaseId]) 
+                              ? casesData[selectedCaseId].title 
+                              : "Kes Siasatan";
+
+            if (!studentName) {
+                alert("Sila masukkan Nama Pelajar / Kumpulan di Halaman 1 terlebih dahulu!");
                 navigateToPage(1);
                 return;
             }
 
-            const btn = document.getElementById('btnSubmitRecord');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-gold-400"></i> <span class="text-xs font-bold">Sedang Menghantar Rekod...</span>';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-gold-400"></i> <span class="text-xs font-bold">Sedang Menghantar...</span>';
+            }
+
+            // Format data URLSearchParams melepasi sekatan CORS
+            const formData = new URLSearchParams();
+            formData.append('studentName', studentName);
+            formData.append('institution', institution);
+            formData.append('caseTitle', caseTitle);
+            formData.append('reflection', reflection);
 
             try {
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        studentName: studentName,
-                        institution: institution,
-                        caseTitle: caseTitle,
-                        reflection: reflection
-                    })
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
                 });
 
-                playSound('success');
-                alert("✅ Rekod siasatan anda berjaya dihantar ke Google Sheets pensyarah!");
-                btn.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-xs font-bold text-emerald-400">REKOD BERJAYA DIHANTAR</span>';
-                btn.className = "w-full bg-emerald-950 border border-emerald-500/50 p-4 rounded-md flex items-center justify-center gap-3";
+                if (typeof playSound === 'function') playSound('success');
+                alert("✅ Rekod siasatan anda berjaya dihantar!");
+        
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-xs font-bold text-emerald-400">REKOD BERJAYA DIHANTAR</span>';
+                    btn.className = "w-full bg-emerald-950 border border-emerald-500/50 p-4 rounded-md flex items-center justify-center gap-3";
+                }
             } catch (error) {
-                playSound('stamp');
-                alert("❌ Gagal menghantar. Sila semak sambungan internet anda.");
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane text-lg text-gold-400"></i> <div class="text-left"><p class="font-bold text-xs">CUBA HANTAR LAGI</p></div>';
+                console.error(error);
+                alert("❌ Ralat penghantaran. Sila semak sambungan internet anda.");
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane text-lg text-gold-400"></i> <div class="text-left"><p class="font-bold text-xs">CUBA HANTAR LAGI</p></div>';
+                }
             }
         }
     </script>
