@@ -1421,6 +1421,17 @@
                 }
             }
         }
+
+            // Kod inisialisasi bila laman web mula-mula dibuka
+            document.addEventListener('DOMContentLoaded', () => {
+                // Pilih Kes #001 secara automatik di latar belakang
+                if (typeof selectCase === 'function') {
+                    selectCase(1);
+                }
+    
+                // Buka Halaman 1 (Cover) terlebih dahulu
+                navigateToPage(1);
+            });
     </script>
 
 </body>
