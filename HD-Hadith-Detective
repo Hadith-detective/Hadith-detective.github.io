@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HADITH DETECTIVE: Investigate. Understand. Apply.</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Special+Elite&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            950: '#050c17',
+                            900: '#0a192f',
+                            800: '#112240',
+                            700: '#1d3557',
+                        },
+                        gold: {
+                            300: '#f3e5ab',
+                            400: '#dfb76c',
+                            500: '#c5a059',
+                            600: '#9e7b3b',
+                        },
+                        beige: {
+                            100: '#fdfbf7',
+                            200: '#f5f2eb',
+                            300: '#e8e2d5',
+                            400: '#d5cbbe',
+                        },
+                        crimson: '#8b0000',
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        playfair: ['Playfair Display', 'serif'],
+                        typewriter: ['Special Elite', 'monospace'],
+                        arabic: ['Amiri', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .typewriter-font { font-family: 'Special Elite', monospace; }
+        .arabic-font { font-family: 'Amiri', serif; }
+        .cinzel-font { font-family: 'Cinzel', serif; }
+        
+        .stamp-classified {
+            border: 3px double #8b0000;
+            color: #8b0000;
+            transform: rotate(-12deg);
+        }
+        .stamp-solved {
+            border: 4px solid #15803d;
+            color: #15803d;
+            transform: rotate(-6deg);
+        }
+
+        .corkboard {
+            background-color: #2a1f18;
+            background-image: radial-gradient(#3d2c23 15%, transparent 16%), radial-gradient(#1f1610 15%, transparent 16%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .paper-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-navy-950 text-beige-100 font-sans min-h-screen flex flex-col overflow-x-hidden antialiased selection:bg-gold-500 selection:text-navy-950">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bg-navy-900 border-b border-gold-500/30 sticky top-0 z-50 px-3 sm:px-4 py-2.5 shadow-xl w-full">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            
+            <!-- Branding -->
+            <div class="flex items-center space-x-2.5 cursor-pointer shrink-0" onclick="navigateToPage(1)">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded bg-gold-500/10 border border-gold-500 flex items-center justify-center text-gold-400">
+                    <i class="fa-solid fa-magnifying-glass text-base sm:text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="cinzel-font font-bold text-gold-400 text-sm sm:text-base md:text-lg tracking-wider leading-none">HADITH DETECTIVE</h1>
+                    <p class="text-[8px] sm:text-[10px] text-beige-300 tracking-widest uppercase mt-0.5">Investigate. Understand. Apply.</p>
+                </div>
+            </div>
+
+            <!-- Global Action Controls -->
+            <div class="flex items-center gap-1.5 sm:gap-2 text-xs shrink-0">
+                <!-- Live Badge Pill -->
+                <div id="headerBadgePill" class="hidden sm:flex items-center gap-1.5 bg-amber-500/10 border border-amber-400/40 text-amber-300 px-2.5 py-1 rounded text-[11px] font-semibold">
+                    <i class="fa-solid fa-award text-amber-400"></i>
+                    <span id="currentBadgeTitle">Junior Detective</span>
+                </div>
+
+                <!-- Question / Case Builder Button -->
+                <button onclick="openQuestionBuilderModal()" class="bg-navy-800 hover:bg-navy-700 text-gold-300 px-2.5 sm:px-3 py-1.5 rounded border border-gold-500/40 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-folder-plus text-gold-400"></i>
+                    <span class="font-semibold hidden sm:inline">Pembina Soalan</span>
+                    <span class="font-semibold sm:hidden">Bina Kes</span>
+                </button>
+
+                <!-- Sound Toggle -->
+                <button onclick="toggleAudio()" class="bg-navy-800 hover:bg-navy-700 text-beige-200 px-2.5 py-1.5 rounded border border-navy-700 transition">
+                    <i id="audioIcon" class="fa-solid fa-volume-high text-gold-400"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- PROGRESS TRACKER & PAGE NAVIGATION BAR -->
+    <div class="bg-navy-900/90 border-b border-navy-800 py-2 px-3 sm:px-4 text-xs text-beige-400 w-full">
+        <div class="max-w-7xl mx-auto space-y-2">
+            
+            <!-- Top Row: Live Investigation Progress Tracker -->
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                <div class="flex items-center gap-2">
+                    <span class="typewriter-font text-gold-400 font-bold">
+                        <i class="fa-solid fa-magnifying-glass-chart mr-1"></i>
+                        PETUNJUK DITEMUI: <span id="clueTrackerText" class="text-emerald-400">0/3</span>
+                    </span>
+                    <span class="text-navy-700">|</span>
+                    <span class="text-amber-300 font-semibold sm:hidden">
+                        <i class="fa-solid fa-award mr-1"></i><span id="mobileBadgeTitle">Junior Detective</span>
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <span class="text-[10px] text-beige-300 shrink-0">Kemajuan Siasatan:</span>
+                    <div class="w-full sm:w-36 h-2 bg-navy-950 rounded-full overflow-hidden border border-navy-700">
+                        <div id="progressBarFill" class="h-full bg-gradient-to-r from-gold-500 to-emerald-400 transition-all duration-500" style="width: 12.5%;"></div>
+                    </div>
+                    <span id="progressPercentText" class="font-mono text-[10px] text-gold-400 font-bold shrink-0">12%</span>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Step Navigation Buttons -->
+            <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar py-0.5 w-full">
+                <button onclick="navigateToPage(1)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-gold-500/20 text-gold-300 border border-gold-500/40 text-[11px]">1. Cover</button>
+                <i class="fa-solid fa-chevron-right text-[9px] text-navy-700 shrink-0"></i>
+                <button onclick="navigateToPage(2)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]">2. Menu Kes</button>
+                <i class="fa-solid fa-chevron-right text-[9px] text-navy-700 shrink-0"></i>
+                <button onclick="navigateToPage(3)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]">3. Fail Kes</button>
+                <i class="fa-solid fa-chevron-right text-[9px] text-navy-700 shrink-0"></i>
+                <button onclick="navigateToPage(4)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]">4. Papan Bukti</button>
+                <i class="fa-solid fa-chevron-right text-[9px] text-navy-700 shrink-0"></i>
+                <button onclick="navigateToPage(5)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]">5. Dilema</button>
+                <i class="fa-solid fa-chevron-right text-[9px] text-navy-700 shrink-0"></i>
+                <button onclick="navigateToPage(6)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]">6. Keputusan</button>
+                <i class="fa-solid fa-chevron-right text-[9px] text-navy-700 shrink-0"></i>
+                <button onclick="navigateToPage(7)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]">7. Analisis Hadis</button>
+                <i class="fa-solid fa-chevron-right text-[9px] text-navy-700 shrink-0"></i>
+                <button onclick="navigateToPage(8)" class="page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]">8. Rumusan Akhir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN INTERACTIVE CONTENT AREA -->
+    <main class="flex-grow px-3 py-4 sm:p-6 max-w-7xl w-full mx-auto flex flex-col justify-center">
+
+        <!-- ================= PAGE 1: COVER PAGE ================= -->
+        <section id="page-1" class="page-screen flex flex-col items-center justify-center py-2 sm:py-6 min-h-[75vh] w-full">
+            <div class="relative w-full max-w-4xl bg-beige-200 text-navy-950 p-5 sm:p-8 md:p-12 rounded-lg paper-shadow border-4 sm:border-8 border-navy-900">
+                
+                <!-- Top File Header Details -->
+                <div class="flex justify-between items-start border-b-2 border-navy-950/20 pb-3 sm:pb-4 mb-4 sm:mb-6 gap-2">
+                    <div>
+                        <span class="bg-crimson text-beige-100 text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 font-bold tracking-widest uppercase rounded-xs inline-block">
+                            SULIT / CLASSIFIED
+                        </span>
+                        <p class="typewriter-font text-[10px] sm:text-xs text-slate-600 mt-2">DOSSIER REF: HD-2026-ISLAMIC-EDU</p>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-gold-600/40 flex items-center justify-center p-1">
+                            <i class="fa-solid fa-fingerprint text-2xl sm:text-3xl text-navy-900/40"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Titles -->
+                <div class="text-center my-5 sm:my-8">
+                    <div class="inline-block relative w-full">
+                        <h1 class="cinzel-font text-2xl sm:text-4xl md:text-6xl font-black text-navy-900 tracking-tight leading-tight mb-2 break-words">
+                            HADITH DETECTIVE
+                        </h1>
+                        <div class="h-1 bg-gold-500 w-3/4 mx-auto my-2 sm:my-3"></div>
+                    </div>
+                    <p class="cinzel-font text-sm sm:text-lg md:text-2xl text-gold-600 font-bold tracking-widest uppercase">
+                        Investigate. Understand. Apply.
+                    </p>
+                    <p class="text-xs md:text-sm text-slate-600 max-w-lg mx-auto mt-3 italic px-2">
+                        Modul Pembelajaran Interaktif Pendidikan Islam Berasaskan Siasatan Kes Realistik & Aplikasi Sunnah.
+                    </p>
+                </div>
+
+                <!-- Visual Element: Folder Illustration -->
+                <div class="bg-beige-300/60 border border-gold-600/30 p-4 sm:p-6 rounded-md my-5 sm:my-6 flex flex-col sm:flex-row items-center text-center sm:text-left gap-4 sm:gap-6">
+                    <div class="w-16 h-16 sm:w-24 sm:h-24 bg-navy-900 text-gold-400 rounded-lg flex items-center justify-center shrink-0 shadow-md">
+                        <i class="fa-solid fa-folder-closed text-3xl sm:text-5xl"></i>
+                    </div>
+                    <div class="space-y-1.5 text-xs md:text-sm">
+                        <p class="font-bold text-navy-900">📑 ARAHAN SIASATAN:</p>
+                        <p class="text-slate-700 leading-relaxed">
+                            1. Teliti senario kes realistik masyarakat.<br>
+                            2. Kumpul & teliti kesemua petunjuk Hadis di papan bukti.<br>
+                            3. Buat keputusan beretika dan kumpul lencana detektif anda.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Group Members & Institution Input Box -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-beige-100 p-4 rounded border border-beige-300 text-xs typewriter-font mb-6 sm:mb-8">
+                    <div>
+                        <label class="block text-slate-500 font-bold uppercase mb-1">Nama Kumpulan / Pelajar:</label>
+                        <input type="text" id="studentNames" value="" class="w-full bg-transparent border-b border-slate-400 py-1 focus:outline-none focus:border-gold-600 text-navy-900 font-semibold" placeholder="Masukkan nama anda...">
+                    </div>
+                    <div>
+                        <label class="block text-slate-500 font-bold uppercase mb-1">Kod Kursus & Institusi:</label>
+                        <input type="text" id="institutionCode" value="QNR4023 - Quran and Sunnah Studies in era Of ICT" class="w-full bg-transparent border-b border-slate-400 py-1 focus:outline-none focus:border-gold-600 text-navy-900 font-semibold" placeholder="Masukkan institusi...">
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="text-center">
+                    <button onclick="navigateToPage(2)" class="w-full sm:w-auto group relative inline-flex items-center justify-center gap-3 bg-navy-900 hover:bg-navy-800 text-gold-400 font-bold text-sm sm:text-lg px-6 sm:px-8 py-3.5 sm:py-4 rounded shadow-2xl transition transform hover:-translate-y-0.5 border border-gold-500">
+                        <i class="fa-solid fa-magnifying-glass text-gold-400 group-hover:rotate-12 transition"></i>
+                        <span class="tracking-widest">MULAKAN SIASATAN</span>
+                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: MAIN MENU ================= -->
+        <section id="page-2" class="page-screen hidden py-4 sm:py-6 w-full">
+            <div class="max-w-5xl mx-auto space-y-6">
+                
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gold-500/30 pb-4">
+                    <div>
+                        <h2 class="cinzel-font text-xl sm:text-2xl md:text-3xl font-bold text-gold-400">SELECT YOUR CASE / PILIH KES SIASATAN</h2>
+                        <p class="text-xs text-beige-300">Pilih salah satu kes di bawah untuk memulakan siasatan bukti Hadis.</p>
+                    </div>
+                    
+                    <button onclick="openQuestionBuilderModal()" class="bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/50 px-4 py-2 rounded text-xs font-bold flex items-center gap-2 self-start md:self-auto">
+                        <i class="fa-solid fa-plus-circle"></i> Tambah / Sunting Soalan Kes
+                    </button>
+                </div>
+
+                <!-- Case Selection Cards Grid -->
+                <div id="casesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <!-- Case Card 01 -->
+                    <div class="bg-navy-900 border-2 border-gold-500/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between hover:border-gold-500 transition-all duration-300 hover:shadow-xl group relative">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-gold-500/10 text-gold-400 font-mono text-xs px-2.5 py-1 rounded border border-gold-500/30 font-bold">
+                                    KES #001
+                                </span>
+                                <i class="fa-solid fa-comments text-2xl text-gold-400/60 group-hover:text-gold-400 transition"></i>
+                            </div>
+                            <h3 class="cinzel-font font-bold text-lg text-beige-100 group-hover:text-gold-300">
+                                Kerahsiaan & Media Sosial
+                            </h3>
+                            <p class="text-xs text-beige-300 leading-relaxed">
+                                Siasatan kes penyebaran maklumat peribadi dan tangkapan skrin tular di media sosial tanpa kebenaran.
+                            </p>
+                            <div class="bg-navy-950 p-3 rounded text-[11px] text-beige-400 space-y-1">
+                                <p><strong class="text-gold-400">Fokus:</strong> Tajassus & Menjaga Aib</p>
+                                <p><strong class="text-gold-400">Tahap:</strong> Asas / Universiti</p>
+                            </div>
+                        </div>
+                        <button onclick="selectCase(1)" class="mt-6 w-full bg-navy-800 hover:bg-gold-500 hover:text-navy-950 text-gold-400 font-bold text-xs py-2.5 rounded transition border border-gold-500/40 flex items-center justify-center gap-2">
+                            <span>SIASAT KES #001</span>
+                            <i class="fa-solid fa-folder-open"></i>
+                        </button>
+                    </div>
+
+                    <!-- Case Card 02 -->
+                    <div class="bg-navy-900 border-2 border-gold-500/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between hover:border-gold-500 transition-all duration-300 hover:shadow-xl group relative">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-gold-500/10 text-gold-400 font-mono text-xs px-2.5 py-1 rounded border border-gold-500/30 font-bold">
+                                    KES #002
+                                </span>
+                                <i class="fa-solid fa-handshake-angle text-2xl text-gold-400/60 group-hover:text-gold-400 transition"></i>
+                            </div>
+                            <h3 class="cinzel-font font-bold text-lg text-beige-100 group-hover:text-gold-300">
+                                Kejujuran & Amanah Perniagaan
+                            </h3>
+                            <p class="text-xs text-beige-300 leading-relaxed">
+                                Siasatan kes pemalsuan maklumat barangan jualan atas talian serta manipulasi harga pasaran.
+                            </p>
+                            <div class="bg-navy-950 p-3 rounded text-[11px] text-beige-400 space-y-1">
+                                <p><strong class="text-gold-400">Fokus:</strong> Integriti & Amanah Muamalat</p>
+                                <p><strong class="text-gold-400">Tahap:</strong> Sederhana</p>
+                            </div>
+                        </div>
+                        <button onclick="selectCase(2)" class="mt-6 w-full bg-navy-800 hover:bg-gold-500 hover:text-navy-950 text-gold-400 font-bold text-xs py-2.5 rounded transition border border-gold-500/40 flex items-center justify-center gap-2">
+                            <span>SIASAT KES #002</span>
+                            <i class="fa-solid fa-folder-open"></i>
+                        </button>
+                    </div>
+
+                    <!-- Case Card 03 -->
+                    <div class="bg-navy-900 border-2 border-gold-500/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between hover:border-gold-500 transition-all duration-300 hover:shadow-xl group relative">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-gold-500/10 text-gold-400 font-mono text-xs px-2.5 py-1 rounded border border-gold-500/30 font-bold">
+                                    KES #003
+                                </span>
+                                <i class="fa-solid fa-users-gear text-2xl text-gold-400/60 group-hover:text-gold-400 transition"></i>
+                            </div>
+                            <h3 class="cinzel-font font-bold text-lg text-beige-100 group-hover:text-gold-300">
+                                Persahabatan & Akhlak Kemasyarakatan
+                            </h3>
+                            <p class="text-xs text-beige-300 leading-relaxed">
+                                Konflik perselisihan faham dalam kumpulan kerja projek universiti dan adab bertegur sapa.
+                            </p>
+                            <div class="bg-navy-950 p-3 rounded text-[11px] text-beige-400 space-y-1">
+                                <p><strong class="text-gold-400">Fokus:</strong> Ukhuwah & Adab Perbezaan Pendapat</p>
+                                <p><strong class="text-gold-400">Tahap:</strong> Sederhana</p>
+                            </div>
+                        </div>
+                        <button onclick="selectCase(3)" class="mt-6 w-full bg-navy-800 hover:bg-gold-500 hover:text-navy-950 text-gold-400 font-bold text-xs py-2.5 rounded transition border border-gold-500/40 flex items-center justify-center gap-2">
+                            <span>SIASAT KES #003</span>
+                            <i class="fa-solid fa-folder-open"></i>
+                        </button>
+                    </div>
+
+                    <!-- Case Card 04 -->
+                    <div class="bg-navy-900 border-2 border-gold-500/30 rounded-lg p-5 sm:p-6 flex flex-col justify-between hover:border-gold-500 transition-all duration-300 hover:shadow-xl group relative">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-gold-500/10 text-gold-400 font-mono text-xs px-2.5 py-1 rounded border border-gold-500/30 font-bold">
+                                    KES #004
+                                </span>
+                                <i class="fa-solid fa-graduation-cap text-2xl text-gold-400/60 group-hover:text-gold-400 transition"></i>
+                            </div>
+                            <h3 class="cinzel-font font-bold text-lg text-beige-100 group-hover:text-gold-300">
+                                Integriti Akademik & Penipuan Tugasan
+                            </h3>
+                            <p class="text-xs text-beige-300 leading-relaxed">
+                                Siasatan kes penggunaan perkhidmatan tugasan tiruan atas talian (assignment helper) dan isu amanah ilmu.
+                            </p>
+                            <div class="bg-navy-950 p-3 rounded text-[11px] text-beige-400 space-y-1">
+                                <p><strong class="text-gold-400">Fokus:</strong> Siddiq (Kejujuran) & Plagiarisme</p>
+                                <p><strong class="text-gold-400">Tahap:</strong> Universiti / Kolej</p>
+                            </div>
+                        </div>
+                        <button onclick="selectCase(4)" class="mt-6 w-full bg-navy-800 hover:bg-gold-500 hover:text-navy-950 text-gold-400 font-bold text-xs py-2.5 rounded transition border border-gold-500/40 flex items-center justify-center gap-2">
+                            <span>SIASAT KES #004</span>
+                            <i class="fa-solid fa-folder-open"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: CASE FILE ================= -->
+        <section id="page-3" class="page-screen hidden py-4 sm:py-6 w-full">
+            <div class="max-w-4xl mx-auto bg-beige-200 text-navy-950 p-5 sm:p-8 md:p-10 rounded-lg paper-shadow border-4 border-navy-900 relative">
+                
+                <!-- Dossier Header -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 border-b-2 border-navy-900/30 pb-4 mb-6">
+                    <div>
+                        <h2 id="caseFileTitle" class="cinzel-font text-xl sm:text-2xl font-black text-navy-900">CASE FILE #001</h2>
+                        <p class="typewriter-font text-xs text-slate-600">LAPORAN INSIDEN & LATAR BELAKANG KES</p>
+                    </div>
+                    <span class="stamp-classified font-mono font-bold text-xs px-3 py-1 border-2 border-crimson text-crimson self-start sm:self-auto">
+                        DOSSIER AKTIF
+                    </span>
+                </div>
+
+                <!-- Incident Content Box -->
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="typewriter-font font-bold text-sm text-navy-900 uppercase border-b border-navy-900/20 pb-1 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-file-lines text-gold-600"></i> Ringkasan Senario Insiden:
+                        </h3>
+                        <p id="caseScenarioText" class="typewriter-font text-xs md:text-sm text-slate-800 leading-relaxed bg-beige-100 p-4 rounded border border-beige-300">
+                            Loading case narrative...
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-beige-300/60 p-4 rounded border border-beige-400 text-xs space-y-1">
+                            <p class="font-bold text-navy-900">👤 PIHAK TERLIBAT:</p>
+                            <p id="casePartiesText" class="text-slate-700">Ahmad (Penyebar) & Amir (Mangsa)</p>
+                        </div>
+                        <div class="bg-beige-300/60 p-4 rounded border border-beige-400 text-xs space-y-1">
+                            <p class="font-bold text-navy-900">📍 LOKASI / PLATFORM:</p>
+                            <p id="caseLocationText" class="text-slate-700">Aplikasi Sembang Kumpulan Whatsapp / Discord</p>
+                        </div>
+                    </div>
+
+                    <!-- Detective Objective -->
+                    <div class="bg-navy-900 text-beige-100 p-4 rounded-md space-y-2">
+                        <p class="text-xs font-bold text-gold-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye text-gold-400"></i> OBJEKTIF DETEKTIF:
+                        </p>
+                        <p id="caseObjectiveText" class="text-xs text-beige-200 leading-relaxed">
+                            Kenal pasti isu etika yang berlaku, cari bukti Hadis yang sesuai untuk menilai perbuatan tersebut, dan pilih tindakan pemulihan yang tepat mengikut Sunnah.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-3 border-t border-navy-900/20 pt-4">
+                    <button onclick="navigateToPage(2)" class="w-full sm:w-auto text-xs font-bold text-navy-900 hover:text-gold-600 flex items-center justify-center sm:justify-start gap-1 py-2">
+                        <i class="fa-solid fa-arrow-left"></i> KEMBALI KE MENU KES
+                    </button>
+                    <button onclick="navigateToPage(4)" class="w-full sm:w-auto bg-navy-900 hover:bg-navy-800 text-gold-400 font-bold text-xs px-6 py-3 rounded flex items-center justify-center gap-2 shadow">
+                        <span>SEMAK PAPAN BUKTI (EVIDENCE)</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: EVIDENCE BOARD ================= -->
+        <section id="page-4" class="page-screen hidden py-4 sm:py-6 w-full">
+            <div class="max-w-5xl mx-auto space-y-6">
+                
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-gold-500/30 pb-4">
+                    <div>
+                        <h2 class="cinzel-font text-xl sm:text-2xl font-bold text-gold-400">EVIDENCE BOARD / PAPAN BUKTI</h2>
+                        <p class="text-xs text-beige-300">Klik butang <strong>TELITI HADIS INI</strong> pada setiap bukti untuk membuka kunci lencana <em>Hadith Explorer</em>.</p>
+                    </div>
+                    <span id="evidenceCounterBadge" class="text-xs font-mono text-gold-400 bg-navy-900 px-3 py-1 rounded border border-gold-500/30 self-start sm:self-auto">
+                        0/3 PETUNJUK DITELITI
+                    </span>
+                </div>
+
+                <!-- Evidence Corkboard Grid -->
+                <div class="corkboard p-4 sm:p-6 rounded-lg border-4 border-navy-900 shadow-2xl grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Evidence Card 1 -->
+                    <div id="evidenceCard1" class="bg-beige-200 text-navy-950 p-4 rounded shadow-lg relative transform md:-rotate-1 hover:rotate-0 transition duration-300 flex flex-col justify-between">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-red-700 rounded-full shadow"></div>
+                        <div>
+                            <div class="flex justify-between items-start border-b border-slate-300 pb-2 mb-2">
+                                <span class="typewriter-font text-xs font-bold text-crimson">EXHIBIT A</span>
+                                <span id="statusExhibit1" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-300 text-slate-700">BELUM DITELITI</span>
+                            </div>
+                            <h4 id="evidenceTitle1" class="font-bold text-xs text-navy-900 mb-2">Petunjuk 01: Kehormatan Diri & Aib</h4>
+                            <p id="evidenceText1" class="typewriter-font text-xs text-slate-700 italic">
+                                "Setiap Muslim ke atas Muslim yang lain adalah haram darahnya, hartanya, dan kehormatannya."
+                            </p>
+                        </div>
+                        <button onclick="inspectEvidence(1)" class="mt-4 w-full bg-navy-900 text-gold-400 hover:bg-navy-800 text-[11px] font-bold py-2 rounded flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass"></i> TELITI HADIS INI
+                        </button>
+                    </div>
+
+                    <!-- Evidence Card 2 -->
+                    <div id="evidenceCard2" class="bg-beige-200 text-navy-950 p-4 rounded shadow-lg relative transform md:rotate-2 hover:rotate-0 transition duration-300 flex flex-col justify-between">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-red-700 rounded-full shadow"></div>
+                        <div>
+                            <div class="flex justify-between items-start border-b border-slate-300 pb-2 mb-2">
+                                <span class="typewriter-font text-xs font-bold text-crimson">EXHIBIT B</span>
+                                <span id="statusExhibit2" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-300 text-slate-700">BELUM DITELITI</span>
+                            </div>
+                            <h4 id="evidenceTitle2" class="font-bold text-xs text-navy-900 mb-2">Petunjuk 02: Menutup Aib Saudara</h4>
+                            <p id="evidenceText2" class="typewriter-font text-xs text-slate-700 italic">
+                                "Barangsiapa yang menutup aib seorang Muslim, Allah akan menutup aibnya di dunia dan di akhirat."
+                            </p>
+                        </div>
+                        <button onclick="inspectEvidence(2)" class="mt-4 w-full bg-navy-900 text-gold-400 hover:bg-navy-800 text-[11px] font-bold py-2 rounded flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass"></i> TELITI HADIS INI
+                        </button>
+                    </div>
+
+                    <!-- Evidence Card 3 -->
+                    <div id="evidenceCard3" class="bg-beige-200 text-navy-950 p-4 rounded shadow-lg relative transform md:-rotate-2 hover:rotate-0 transition duration-300 flex flex-col justify-between">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-4 h-4 bg-red-700 rounded-full shadow"></div>
+                        <div>
+                            <div class="flex justify-between items-start border-b border-slate-300 pb-2 mb-2">
+                                <span class="typewriter-font text-xs font-bold text-crimson">EXHIBIT C</span>
+                                <span id="statusExhibit3" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-300 text-slate-700">BELUM DITELITI</span>
+                            </div>
+                            <h4 id="evidenceTitle3" class="font-bold text-xs text-navy-900 mb-2">Petunjuk 03: Berkata Baik atau Diam</h4>
+                            <p id="evidenceText3" class="typewriter-font text-xs text-slate-700 italic">
+                                "Barangsiapa yang beriman kepada Allah dan hari akhirat, hendaklah dia berkata yang baik atau diam."
+                            </p>
+                        </div>
+                        <button onclick="inspectEvidence(3)" class="mt-4 w-full bg-navy-900 text-gold-400 hover:bg-navy-800 text-[11px] font-bold py-2 rounded flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass"></i> TELITI HADIS INI
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Detective Observation Notes -->
+                <div class="bg-navy-900 border border-gold-500/30 p-4 rounded-lg space-y-2">
+                    <label class="block text-xs font-bold text-gold-400 uppercase tracking-wider">
+                        📝 NOTA PENGAMATAN DETEKTIF (PENTING UNTUK REFLEKSI):
+                    </label>
+                    <textarea id="detectiveNotes" rows="2" class="w-full bg-navy-950 border border-navy-700 rounded p-2 text-xs text-beige-100 focus:outline-none focus:border-gold-500" placeholder="Catat perbandingan antara perbuatan sasaran dan arahan Hadis di atas..."></textarea>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
+                    <button onclick="navigateToPage(3)" class="w-full sm:w-auto text-xs font-bold text-gold-400 hover:underline py-2">
+                        ← KEMBALI KE FAIL KES
+                    </button>
+                    <button onclick="navigateToPage(5)" class="w-full sm:w-auto bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs px-6 py-3 rounded shadow-lg flex items-center justify-center gap-2">
+                        <span>TERUSKAN KE DILEMA (CHOOSE ACTION)</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: CHOOSE YOUR ACTION ================= -->
+        <section id="page-5" class="page-screen hidden py-4 sm:py-6 w-full">
+            <div class="max-w-4xl mx-auto space-y-6">
+                
+                <div class="text-center space-y-2">
+                    <h2 class="cinzel-font text-xl sm:text-2xl md:text-3xl font-bold text-gold-400">CHOOSE YOUR ACTION / BUAT KEPUTUSAN SIASATAN</h2>
+                    <p id="dilemmaQuestionText" class="text-xs md:text-sm text-beige-200 max-w-2xl mx-auto bg-navy-900 p-4 rounded border border-gold-500/30">
+                        Berdasarkan bukti Hadis yang telah anda kaji, apakah tindakan paling tepat yang perlu diambil oleh individu dalam situasi ini?
+                    </p>
+                </div>
+
+                <!-- Answer Choices (A, B, C) Cards -->
+                <div class="space-y-4">
+                    
+                    <!-- Option A -->
+                    <div onclick="makeDecision('A')" class="choice-card bg-navy-900 border-2 border-gold-500/30 hover:border-gold-400 p-4 sm:p-5 rounded-lg cursor-pointer transition transform hover:-translate-y-1 flex items-start gap-3 sm:gap-4 group">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gold-500/10 border border-gold-500 text-gold-400 font-bold flex items-center justify-center shrink-0 group-hover:bg-gold-500 group-hover:text-navy-950 transition">
+                            A
+                        </div>
+                        <div class="flex-grow space-y-1">
+                            <h4 id="optionATitle" class="font-bold text-xs sm:text-sm text-gold-300">Tindakan A: Menyebarkan tangkapan skrin ke kumpulan lain</h4>
+                            <p id="optionADesc" class="text-xs text-beige-300 leading-relaxed">
+                                Menyebarkan perbualan tersebut supaya orang lain berjaga-jaga dan tahu tentang keburukan individu berkenaan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Option B -->
+                    <div onclick="makeDecision('B')" class="choice-card bg-navy-900 border-2 border-gold-500/30 hover:border-gold-400 p-4 sm:p-5 rounded-lg cursor-pointer transition transform hover:-translate-y-1 flex items-start gap-3 sm:gap-4 group">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gold-500/10 border border-gold-500 text-gold-400 font-bold flex items-center justify-center shrink-0 group-hover:bg-gold-500 group-hover:text-navy-950 transition">
+                            B
+                        </div>
+                        <div class="flex-grow space-y-1">
+                            <h4 id="optionBTitle" class="font-bold text-xs sm:text-sm text-gold-300">Tindakan B: Memadamkan maklumat & menasihati secara peribadi</h4>
+                            <p id="optionBDesc" class="text-xs text-beige-300 leading-relaxed">
+                                Hentikan penyebaran, padam tangkapan skrin, dan memberi nasihat secara hikmah secara peribadi tanpa memalukan.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Option C -->
+                    <div onclick="makeDecision('C')" class="choice-card bg-navy-900 border-2 border-gold-500/30 hover:border-gold-400 p-4 sm:p-5 rounded-lg cursor-pointer transition transform hover:-translate-y-1 flex items-start gap-3 sm:gap-4 group">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gold-500/10 border border-gold-500 text-gold-400 font-bold flex items-center justify-center shrink-0 group-hover:bg-gold-500 group-hover:text-navy-950 transition">
+                            C
+                        </div>
+                        <div class="flex-grow space-y-1">
+                            <h4 id="optionCTitle" class="font-bold text-xs sm:text-sm text-gold-300">Tindakan C: Membiarkan sahaja dan tidak masuk campur</h4>
+                            <p id="optionCDesc" class="text-xs text-beige-300 leading-relaxed">
+                                Abaikannya tanpa mengambil sebarang tindakan atau memberi nasihat, serta membiarkan orang lain terus menyebarkannya.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 6: INVESTIGATION RESULT & FEEDBACK ================= -->
+        <section id="page-6" class="page-screen hidden py-4 sm:py-6 w-full">
+            <div class="max-w-4xl mx-auto bg-beige-200 text-navy-950 p-5 sm:p-8 md:p-10 rounded-lg paper-shadow border-4 border-navy-900 relative">
+                
+                <!-- Result Header Banner -->
+                <div class="text-center space-y-3 border-b-2 border-navy-900/20 pb-6 mb-6">
+                    <span id="resultStamp" class="inline-block font-mono font-black text-base sm:text-lg md:text-xl px-4 sm:px-6 py-2 border-4 rounded transform -rotate-3">
+                        ALIGNED WITH SUNNAH
+                    </span>
+                    <h3 id="resultHeading" class="cinzel-font text-xl sm:text-2xl font-bold text-navy-900">
+                        KEPUTUSAN SIASATAN TEPAT!
+                    </h3>
+                    <p id="chosenOptionBadge" class="text-xs font-mono text-slate-600 font-bold">
+                        Pilihan Anda: Tindakan B
+                    </p>
+                </div>
+
+                <!-- Detailed Feedback Explanation Box -->
+                <div class="space-y-4">
+                    <div id="feedbackCardBox" class="bg-beige-100 p-4 sm:p-5 rounded border-l-4 border-emerald-600 space-y-2">
+                        <h4 class="font-bold text-xs uppercase text-navy-900 flex items-center gap-2">
+                            <i class="fa-solid fa-comment-dots text-gold-600"></i> MAKLUM BALAS & PENERANGAN JAWAPAN:
+                        </h4>
+                        <p id="resultExplanation" class="typewriter-font text-xs md:text-sm text-slate-800 leading-relaxed">
+                            Penerangan mengapa jawapan betul atau salah akan dipaparkan di sini.
+                        </p>
+                    </div>
+
+                    <!-- Hadith Short Preview with Full Reference -->
+                    <div class="bg-navy-900 text-beige-100 p-4 sm:p-5 rounded-md space-y-2">
+                        <span class="text-[10px] font-mono text-gold-400 uppercase tracking-widest block">DALIL HADIS SOKONGAN:</span>
+                        <p id="resultHadithQuote" class="arabic-font text-base sm:text-lg text-gold-300 text-right font-bold leading-loose">
+                            مَنْ سَتَرَ مُسْلِمًا سَتَرَهُ اللَّهُ فِي الدُّنْيَا وَالْآخِرَةِ
+                        </p>
+                        <p id="resultHadithTrans" class="text-xs text-beige-200 italic">
+                            "Barangsiapa yang menutup aib seorang Muslim, Allah akan menutup aibnya di dunia dan di akhirat."
+                        </p>
+                        <p id="resultHadithRefSummary" class="text-[11px] font-mono text-amber-300 pt-1 border-t border-navy-800">
+                            Rujukan: Sahih Muslim (No. 2699) | Status: Hadis Sahih
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-3 border-t border-navy-900/20 pt-4">
+                    <button onclick="navigateToPage(5)" class="w-full sm:w-auto bg-slate-300 hover:bg-slate-400 text-navy-950 font-bold text-xs px-4 py-2.5 rounded flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> TUKAR JAWAPAN (TRY AGAIN)
+                    </button>
+                    <button onclick="navigateToPage(7)" class="w-full sm:w-auto bg-navy-900 hover:bg-navy-800 text-gold-400 font-bold text-xs px-6 py-3 rounded flex items-center justify-center gap-2 shadow">
+                        <span>TEROKA ANALISIS & RUJUKAN HADIS</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 7: HADITH ANALYSIS & FULL REFERENCE ================= -->
+        <section id="page-7" class="page-screen hidden py-4 sm:py-6 w-full">
+            <div class="max-w-4xl mx-auto space-y-6">
+                
+                <div class="text-center space-y-1 border-b border-gold-500/30 pb-4">
+                    <h2 class="cinzel-font text-xl sm:text-2xl md:text-3xl font-bold text-gold-400">HADITH INSIGHT / ANALISIS & RUJUKAN HADIS</h2>
+                    <p class="text-xs text-beige-300">Perincian Sanad, Sumber Kitab, Status Hadis & Aplikasi Kehidupan</p>
+                </div>
+
+                <!-- Main Hadith Card -->
+                <div class="bg-navy-900 border-2 border-gold-500/40 rounded-lg p-5 sm:p-8 space-y-6 shadow-2xl relative">
+                    <div class="text-center space-y-3">
+                        <span id="analysisStatusPill" class="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded font-bold">
+                            STATUS: HADIS SAHIH
+                        </span>
+                        <!-- Original Arabic Text -->
+                        <p id="analysisArabicText" class="arabic-font text-xl sm:text-2xl md:text-3xl text-gold-300 leading-loose tracking-wide text-center font-bold">
+                            عَنْ أَبِي هُرَيْرَةَ رَضِيَ اللَّهُ عَنْهُ عَنِ النَّبِيِّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: "مَنْ سَتَرَ مُسْلِمًا سَتَرَهُ اللَّهُ فِي الدُّنْيَا وَالْآخِرَةِ"
+                        </p>
+                        <!-- Translation -->
+                        <p id="analysisTranslationText" class="text-xs sm:text-sm text-beige-100 italic max-w-2xl mx-auto">
+                            Daripada Abu Hurairah RA, daripada Nabi SAW bersabda: "Barangsiapa yang menutup aib seorang Muslim, Allah akan menutup aibnya di dunia dan di akhirat."
+                        </p>
+                    </div>
+
+                    <!-- Detailed Hadith Metadata Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 bg-navy-950 p-3.5 rounded-lg border border-gold-500/30 text-xs">
+                        <div class="p-2 bg-navy-900 rounded">
+                            <span class="block text-[10px] text-slate-400 uppercase">Perawi Sahabat</span>
+                            <strong id="metaNarrator" class="text-gold-300">Abu Hurairah RA</strong>
+                        </div>
+                        <div class="p-2 bg-navy-900 rounded">
+                            <span class="block text-[10px] text-slate-400 uppercase">Imam Periwayat</span>
+                            <strong id="metaImam" class="text-gold-300">Imam Muslim</strong>
+                        </div>
+                        <div class="p-2 bg-navy-900 rounded">
+                            <span class="block text-[10px] text-slate-400 uppercase">Nama Kitab</span>
+                            <strong id="metaBook" class="text-gold-300">Sahih Muslim</strong>
+                        </div>
+                        <div class="p-2 bg-navy-900 rounded">
+                            <span class="block text-[10px] text-slate-400 uppercase">Nombor Hadis</span>
+                            <strong id="metaNumber" class="text-gold-300">No. 2699</strong>
+                        </div>
+                        <div class="p-2 bg-navy-900 rounded col-span-2 sm:col-span-1">
+                            <span class="block text-[10px] text-slate-400 uppercase">Status Hadis</span>
+                            <strong id="metaStatus" class="text-emerald-400">Sahih</strong>
+                        </div>
+                    </div>
+
+                    <hr class="border-gold-500/20">
+
+                    <!-- 3 Scholarly Analysis Pillars -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-navy-950 p-4 rounded border border-gold-500/20 space-y-2">
+                            <h4 class="font-bold text-xs text-gold-400 flex items-center gap-2">
+                                <i class="fa-solid fa-book-quran"></i> PENGAJARAN UTAMA
+                            </h4>
+                            <p id="analysisKeyTeaching" class="text-xs text-beige-300 leading-relaxed">
+                                Isu menjaga maruah dan kehormatan sesama Muslim adalah kewajipan utama dalam syariat Islam.
+                            </p>
+                        </div>
+
+                        <div class="bg-navy-950 p-4 rounded border border-gold-500/20 space-y-2">
+                            <h4 class="font-bold text-xs text-gold-400 flex items-center gap-2">
+                                <i class="fa-solid fa-heart text-crimson"></i> NILAI ISLAM
+                            </h4>
+                            <p id="analysisIslamicValues" class="text-xs text-beige-300 leading-relaxed">
+                                Amanah, Kasih Sayang (Rahmah), Menjaga Kehormatan (Hifz Al-'Ird), dan Sifat Rahsiakan Keburukan.
+                            </p>
+                        </div>
+
+                        <div class="bg-navy-950 p-4 rounded border border-gold-500/20 space-y-2">
+                            <h4 class="font-bold text-xs text-gold-400 flex items-center gap-2">
+                                <i class="fa-solid fa-mobile-screen"></i> APLIKASI SEMASA
+                            </h4>
+                            <p id="analysisApplication" class="text-xs text-beige-300 leading-relaxed">
+                                Tidak menukar kesilapan orang lain menjadi bahan tular, menyekat mesej berunsur fitnah di media sosial.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
+                    <button onclick="navigateToPage(6)" class="w-full sm:w-auto text-xs font-bold text-gold-400 hover:underline py-2">
+                        ← KEMBALI KE KEPUTUSAN
+                    </button>
+                    <button onclick="navigateToPage(8)" class="w-full sm:w-auto bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs px-6 py-3 rounded shadow flex items-center justify-center gap-2">
+                        <span>LIHAT FINAL LEARNING SUMMARY</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 8: FINAL LEARNING SUMMARY & CASE CLOSED ================= -->
+        <section id="page-8" class="page-screen hidden py-4 sm:py-6 w-full">
+            <div class="max-w-4xl mx-auto bg-beige-200 text-navy-950 p-5 sm:p-8 md:p-10 rounded-lg paper-shadow border-4 border-navy-900 relative">
+
+                <!-- Header Stamp -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 border-b-2 border-navy-900/30 pb-4 mb-6">
+                    <div>
+                        <h2 class="cinzel-font text-xl sm:text-3xl font-black text-navy-900">FINAL LEARNING SUMMARY</h2>
+                        <p class="typewriter-font text-xs text-slate-600">RUMUSAN PEMBELAJARAN AKHIR & PENCAPAIAN DETEKTIF</p>
+                    </div>
+                    <span class="stamp-solved font-mono font-bold text-xs sm:text-sm px-3 sm:px-4 py-1.5 text-emerald-800 border-4 border-emerald-800 transform -rotate-6 self-start sm:self-auto">
+                        CASE CLOSED / SOLVED
+                    </span>
+                </div>
+
+                <!-- Achievement / Badges Unlocked Section -->
+                <div class="bg-navy-900 text-beige-100 p-4 sm:p-5 rounded-lg border-2 border-gold-500/40 mb-6">
+                    <h3 class="font-bold text-xs text-gold-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-amber-400"></i> PENCAPAIAN & LENCANA DETEKTIF (ACHIEVEMENT BADGES):
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <!-- Badge 1 -->
+                        <div id="badgeCardJunior" class="p-3 rounded bg-navy-950 border border-gold-500/50 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid fa-user-secret"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-xs text-gold-300">Junior Detective</p>
+                                <p class="text-[10px] text-emerald-400">✓ Dibuka (Sertai Siasatan)</p>
+                            </div>
+                        </div>
+
+                        <!-- Badge 2 -->
+                        <div id="badgeCardExplorer" class="p-3 rounded bg-navy-950 border border-slate-700 opacity-50 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid fa-book-open-reader"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-xs text-slate-300">Hadith Explorer</p>
+                                <p id="badgeExplorerStatus" class="text-[10px] text-slate-400">Teliti 3/3 Petunjuk Bukti</p>
+                            </div>
+                        </div>
+
+                        <!-- Badge 3 -->
+                        <div id="badgeCardSolver" class="p-3 rounded bg-navy-950 border border-slate-700 opacity-50 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid fa-medal"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-xs text-slate-300">Case Solver</p>
+                                <p id="badgeSolverStatus" class="text-[10px] text-slate-400">Selesaikan Dilema Dengan Tepat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4-Part Final Learning Summary -->
+                <div class="space-y-4">
+                    <!-- 1. Ringkasan Kes -->
+                    <div class="bg-beige-100 p-4 rounded border border-beige-300 space-y-1.5">
+                        <h3 class="font-bold text-xs text-navy-900 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open text-gold-600"></i> 1. RINGKASAN KES SIASATAN:
+                        </h3>
+                        <p id="summaryCaseName" class="font-bold text-xs text-crimson">CASE FILE #001: Kerahsiaan & Media Sosial</p>
+                        <p id="summaryCaseOverview" class="typewriter-font text-xs text-slate-800 leading-relaxed">
+                            Ringkasan senario kes yang disiasat.
+                        </p>
+                    </div>
+
+                    <!-- 2. Hadis Yang Dipelajari -->
+                    <div class="bg-beige-100 p-4 rounded border border-beige-300 space-y-2">
+                        <h3 class="font-bold text-xs text-navy-900 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-scroll text-gold-600"></i> 2. HADIS YANG DIPELAJARI:
+                        </h3>
+                        <p id="summaryHadithArabic" class="arabic-font text-base sm:text-lg text-right text-navy-900 font-bold">
+                            ...
+                        </p>
+                        <p id="summaryHadithText" class="typewriter-font text-xs text-slate-800 italic">
+                            "..."
+                        </p>
+                        <p id="summaryHadithFullRef" class="text-[11px] font-mono text-gold-700 font-bold">
+                            Perawi: Abu Hurairah RA | Kitab: Sahih Muslim (No. 2699) | Status: Sahih
+                        </p>
+                    </div>
+
+                    <!-- 3. Pengajaran Utama -->
+                    <div class="bg-beige-100 p-4 rounded border border-beige-300 space-y-1.5">
+                        <h3 class="font-bold text-xs text-navy-900 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-gold-600"></i> 3. PENGAJARAN UTAMA (IBRAH):
+                        </h3>
+                        <p id="summaryKeyLesson" class="typewriter-font text-xs text-slate-800 leading-relaxed">
+                            Pengajaran utama daripada kes ini.
+                        </p>
+                    </div>
+
+                    <!-- 4. Refleksi Pemain -->
+                    <div class="bg-navy-900 text-beige-100 p-4 sm:p-5 rounded-md space-y-3">
+                        <label class="block text-xs font-bold text-gold-400 uppercase tracking-widest flex items-center gap-2">
+                            <i class="fa-solid fa-pen-fancy"></i> 4. REFLEKSI PEMAIN (WHAT HAVE YOU LEARNED?):
+                        </label>
+                        <textarea id="finalReflectionText" rows="3" class="w-full bg-navy-950 border border-navy-700 rounded p-3 text-xs text-beige-100 focus:outline-none focus:border-gold-500" placeholder="Tuliskan refleksi peribadi anda tentang bagaimana Hadis ini mengubah pendekatan anda dalam kehidupan seharian..."></textarea>
+                    </div>
+
+                    <!-- Action Buttons: Submit & Print Export -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <!-- Butang Auto-Hantar Rekod Siasatan -->
+                        <button id="btnSubmitRecord" onclick="sendDataToGoogleSheet()" class="w-full bg-navy-900 hover:bg-navy-800 text-gold-400 p-4 rounded-md border border-gold-500/40 flex items-center justify-center gap-3 transition shadow">
+                            <i class="fa-solid fa-paper-plane text-lg text-gold-400"></i>
+                            <div class="text-left">
+                                <p class="font-bold text-xs">HANTAR REKOD SIASATAN</p>
+                                <p class="text-[10px] text-beige-300">Simpan nama, lencana & refleksi ke fail pensyarah</p>
+                            </div>
+                        </button>
+                        
+                        <!-- Print PDF Report Button -->
+                        <button onclick="generatePDFReport()" class="w-full bg-navy-900 hover:bg-navy-800 text-gold-400 p-4 rounded-md border border-gold-500/40 flex items-center justify-center gap-3 transition shadow">
+                            <i class="fa-solid fa-file-pdf text-lg"></i>
+                            <div class="text-left">
+                                <p class="font-bold text-xs">MUAT TURUN SIJIL / REKOD PDF</p>
+                                <p class="text-[10px] text-beige-300">Cetak rumusan pembelajaran lengkap</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Buttons -->
+                <div class="mt-8 flex flex-col sm:flex-row justify-between items-center gap-3 border-t border-navy-900/20 pt-4">
+                    <button onclick="navigateToPage(2)" class="w-full sm:w-auto bg-slate-300 hover:bg-slate-400 text-navy-950 font-bold text-xs px-6 py-3 rounded flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list"></i> PILIH KES LAIN
+                    </button>
+                    <button onclick="navigateToPage(1)" class="w-full sm:w-auto bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs px-6 py-3 rounded flex items-center justify-center gap-2 shadow">
+                        <i class="fa-solid fa-rotate"></i> MULAKAN SIASATAN BAHARU
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= QUESTION & CASE BUILDER MODAL ================= -->
+    <div id="questionBuilderModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-navy-900 border-2 border-gold-500 rounded-lg max-w-3xl w-full p-4 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl relative">
+            
+            <div class="flex justify-between items-center border-b border-gold-500/30 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-folder-plus text-gold-400 text-lg sm:text-xl"></i>
+                    <h3 class="cinzel-font text-base sm:text-lg font-bold text-gold-400">PEMBINA SOALAN & KES BAHARU</h3>
+                </div>
+                <button onclick="closeQuestionBuilderModal()" class="text-beige-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="caseBuilderForm" onsubmit="handleSaveCustomCase(event)" class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold text-gold-400 uppercase mb-1">Tajuk Kes Siasatan:</label>
+                        <input type="text" id="builderCaseTitle" required class="w-full bg-navy-950 border border-navy-700 rounded p-2 text-beige-100 focus:outline-none focus:border-gold-500" placeholder="Cth: Hak Kejiran & Keharmonian">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gold-400 uppercase mb-1">Nombor / Kod Kes:</label>
+                        <input type="text" id="builderCaseCode" required class="w-full bg-navy-950 border border-navy-700 rounded p-2 text-beige-100 focus:outline-none focus:border-gold-500" placeholder="KES #005">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gold-400 uppercase mb-1">Senario / Latar Belakang Kes:</label>
+                    <textarea id="builderCaseScenario" rows="3" required class="w-full bg-navy-950 border border-navy-700 rounded p-2 text-beige-100 focus:outline-none focus:border-gold-500" placeholder="Terangkan senario masalah realistik yang berlaku..."></textarea>
+                </div>
+
+                <div class="bg-navy-950 p-4 rounded border border-navy-700 space-y-3">
+                    <p class="font-bold text-gold-400 uppercase">Pilihan Jawapan Dilema Etika:</p>
+                    <div class="space-y-2">
+                        <label class="block text-beige-300 font-semibold">Pilihan A:</label>
+                        <input type="text" id="builderOptionA" required class="w-full bg-navy-900 border border-navy-700 rounded p-2 text-beige-100" placeholder="Tindakan A...">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-beige-300 font-semibold">Pilihan B (Jawapan Sunnah / Tepat):</label>
+                        <input type="text" id="builderOptionB" required class="w-full bg-navy-900 border border-navy-700 rounded p-2 text-beige-100" placeholder="Tindakan B...">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-beige-300 font-semibold">Pilihan C:</label>
+                        <input type="text" id="builderOptionC" required class="w-full bg-navy-900 border border-navy-700 rounded p-2 text-beige-100" placeholder="Tindakan C...">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-navy-950 p-4 rounded border border-navy-700">
+                    <div>
+                        <label class="block font-bold text-gold-400 uppercase mb-1">Matn Hadis (Bahasa Arab):</label>
+                        <textarea id="builderHadithArabic" rows="2" class="w-full bg-navy-900 border border-navy-700 rounded p-2 text-beige-100 arabic-font text-sm" placeholder="تَكَلَّمْ بِخَيْرٍ أَوْ اصْمُتْ"></textarea>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gold-400 uppercase mb-1">Terjemahan & Rujukan Hadis:</label>
+                        <textarea id="builderHadithTrans" rows="2" class="w-full bg-navy-900 border border-navy-700 rounded p-2 text-beige-100" placeholder="Maksud hadis dan rujukan (Cth: Sahih Bukhari)..."></textarea>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeQuestionBuilderModal()" class="bg-navy-800 text-beige-300 px-4 py-2 rounded">Batal</button>
+                    <button type="submit" class="bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold px-6 py-2 rounded">Simpan Kes & Soalan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= EVIDENCE INSPECTION MODAL (WITH FULL HADITH REFERENCE) ================= -->
+    <div id="evidenceModal" class="fixed inset-0 bg-navy-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-beige-200 text-navy-950 border-4 border-navy-900 rounded-lg max-w-2xl w-full p-5 sm:p-6 space-y-4 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start border-b border-slate-300 pb-3">
+                <div>
+                    <span id="modalExhibitTag" class="typewriter-font text-xs font-bold text-crimson">EXHIBIT DETAIL</span>
+                    <h3 id="modalExhibitTitle" class="cinzel-font text-base sm:text-lg font-bold text-navy-900">Menganalisis Bukti Hadis</h3>
+                </div>
+                <button onclick="closeEvidenceModal()" class="text-slate-600 hover:text-navy-900">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3">
+                <!-- Matn Arab -->
+                <div class="bg-beige-100 p-4 rounded border border-beige-300 space-y-2">
+                    <p class="text-xs font-bold text-gold-600 uppercase">Matn Hadis (Bahasa Arab):</p>
+                    <p id="modalExhibitArabic" class="arabic-font text-lg sm:text-xl text-right text-navy-900 font-bold leading-relaxed">
+                        ...
+                    </p>
+                </div>
+
+                <!-- Terjemahan -->
+                <div class="bg-beige-100 p-4 rounded border border-beige-300 space-y-1">
+                    <p class="text-xs font-bold text-navy-900 uppercase">Terjemahan Hadis:</p>
+                    <p id="modalExhibitTranslation" class="typewriter-font text-xs text-slate-800 italic">
+                        ...
+                    </p>
+                </div>
+
+                <!-- Rujukan Terperinci (Perawi, Imam, Kitab, Nombor, Status) -->
+                <div class="bg-navy-900 text-beige-100 p-3.5 rounded-lg border border-gold-500/40">
+                    <p class="text-[10px] font-bold text-gold-400 uppercase tracking-wider mb-2">
+                        <i class="fa-solid fa-book-bookmark mr-1"></i> MAKLUMAT RUJUKAN & TAKHRIJ HADIS:
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
+                        <div class="bg-navy-950 p-2 rounded">
+                            <span class="text-slate-400 block text-[9px]">PERAWI:</span>
+                            <strong id="modalRefNarrator" class="text-gold-300">-</strong>
+                        </div>
+                        <div class="bg-navy-950 p-2 rounded">
+                            <span class="text-slate-400 block text-[9px]">IMAM:</span>
+                            <strong id="modalRefImam" class="text-gold-300">-</strong>
+                        </div>
+                        <div class="bg-navy-950 p-2 rounded">
+                            <span class="text-slate-400 block text-[9px]">KITAB:</span>
+                            <strong id="modalRefBook" class="text-gold-300">-</strong>
+                        </div>
+                        <div class="bg-navy-950 p-2 rounded">
+                            <span class="text-slate-400 block text-[9px]">NO. HADIS:</span>
+                            <strong id="modalRefNumber" class="text-gold-300">-</strong>
+                        </div>
+                        <div class="bg-navy-950 p-2 rounded col-span-2 sm:col-span-2">
+                            <span class="text-slate-400 block text-[9px]">STATUS HADIS:</span>
+                            <strong id="modalRefStatus" class="text-emerald-400">-</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-right pt-2">
+                <button onclick="closeEvidenceModal()" class="w-full sm:w-auto bg-navy-900 text-gold-400 font-bold text-xs px-5 py-2.5 rounded shadow">
+                    ✓ Fahami & Tandakan Bukti Diteliti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Global Game State
+        let currentPage = 1;
+        let selectedCaseId = 1;
+        let soundEnabled = true;
+
+        // Progress & Achievement State
+        let inspectedClues = new Set();
+        let isCaseSolvedCorrectly = false;
+
+        // Case Databases (With Full Hadith References & Specific Option Feedback)
+        const casesData = {
+            1: {
+                title: "CASE FILE #001: Kerahsiaan & Media Sosial",
+                scenario: "Ahmad secara tidak sengaja memperoleh tangkapan skrin (screenshot) perbualan peribadi rakan sekelasnya, Amir, yang sedang meluahkan masalah peribadi. Ahmad rasa berbelah bahagi sama ada mahu memuat naik maklumat ini ke akaun media sosialnya bagi mendapatkan perkongsian (shares) dan perhatian, atau memadamkannya.",
+                parties: "Ahmad (Penyebar) & Amir (Rakan)",
+                location: "Aplikasi Whatsapp / Discord",
+                objective: "Kenal pasti nilai amanah kerahsiaan dan dalil menutup aib mengikut prinsip Hadis Sahih.",
+                evidence: [
+                    {
+                        title: "Petunjuk 01: Kehormatan Diri",
+                        arabic: "كُلُّ الْمُسْلِمِ عَلَى الْمُسْلِمِ حَرَامٌ دَمُهُ وَمَالُهُ وَعِرْضُهُ",
+                        trans: "Setiap Muslim ke atas Muslim yang lain adalah haram darahnya, hartanya, dan kehormatannya.",
+                        narrator: "Abu Hurairah RA",
+                        imam: "Imam Muslim",
+                        book: "Sahih Muslim",
+                        number: "No. 2564",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 02: Menutup Aib",
+                        arabic: "مَنْ سَتَرَ مُسْلِمًا سَتَرَهُ اللَّهُ فِي الدُّنْيَا وَالْآخِرَةِ",
+                        trans: "Barangsiapa yang menutup aib seorang Muslim, Allah akan menutup aibnya di dunia dan di akhirat.",
+                        narrator: "Abu Hurairah RA",
+                        imam: "Imam Muslim",
+                        book: "Sahih Muslim",
+                        number: "No. 2699",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 03: Berkata Baik atau Diam",
+                        arabic: "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الْآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",
+                        trans: "Barangsiapa yang beriman kepada Allah dan hari akhirat, hendaklah dia berkata yang baik atau diam.",
+                        narrator: "Abu Hurairah RA",
+                        imam: "Imam al-Bukhari",
+                        book: "Sahih al-Bukhari",
+                        number: "No. 6018",
+                        status: "Hadis Sahih"
+                    }
+                ],
+                dilemmaQuestion: "Apakah tindakan paling beretika mengikut prinsip Hadis yang patut diambil oleh Ahmad?",
+                options: {
+                    A: {
+                        title: "Menyebarkan tangkapan skrin ke kumpulan lain",
+                        desc: "Menyebarkan perbualan tersebut supaya orang lain berjaga-jaga dan tahu tentang keburukan individu berkenaan.",
+                        feedback: "SALAH: Menyebarkan tangkapan skrin peribadi kepada umum membuka keaiban saudara se-Islam dan menjatuhkan maruah ('ird) yang diharamkan dalam Sahih Muslim (No. 2564)."
+                    },
+                    B: {
+                        title: "Memadamkan maklumat & menasihati secara peribadi",
+                        desc: "Hentikan penyebaran, padam tangkapan skrin, dan memberi nasihat secara hikmah secara peribadi tanpa memalukan.",
+                        feedback: "BETUL! Memadam tangkapan skrin dan menasihati secara peribadi menepati sabda Nabi SAW dalam Sahih Muslim (No. 2699) bahawa Allah akan menutup aib orang yang menutup aib saudaranya."
+                    },
+                    C: {
+                        title: "Membiarkan sahaja tanpa berbuat apa-apa",
+                        desc: "Abaikannya tanpa memberi nasihat atau bertindak menutup penyebaran maklumat.",
+                        feedback: "KURANG TEPAT: Walaupun tidak menyebarkannya, membiarkan bahan aib terus tersebar tanpa memadamnya atau menegur secara berhikmah tidak memenuhi tuntutan saling menasihati dalam Islam."
+                    }
+                },
+                correctAnswer: 'B',
+                hadithAnalysis: {
+                    arabic: "عَنْ أَبِي هُرَيْرَةَ رَضِيَ اللَّهُ عَنْهُ عَنِ النَّبِيِّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: \"مَنْ سَتَرَ مُسْلِمًا سَتَرَهُ اللَّهُ فِي الدُّنْيَا وَالْآخِرَةِ\"",
+                    translation: "Daripada Abu Hurairah RA, daripada Nabi SAW bersabda: \"Barangsiapa yang menutup aib seorang Muslim, Allah akan menutup aibnya di dunia dan di akhirat.\"",
+                    narrator: "Abu Hurairah RA",
+                    imam: "Imam Muslim",
+                    book: "Sahih Muslim",
+                    number: "No. 2699",
+                    status: "Sahih",
+                    keyTeaching: "Mencegah perbuatan mengintip (tajassus) dan memelihara keaiban individu di media sosial.",
+                    islamicValues: "Amanah, Menjaga Kehormatan (Hifz Al-'Ird), dan Sifat Rahsiakan Keburukan.",
+                    realLife: "Tidak 'repost' atau memviralkan perbualan peribadi rakan di platform digital."
+                }
+            },
+            2: {
+                title: "CASE FILE #002: Kejujuran & Amanah Perniagaan",
+                scenario: "Siti menjalankan perniagaan pakaian secara atas talian. Beliau mendapati sebahagian fabrik baju jualan baharunya mudah rosak apabila dibasuh. Pembekal menyarankan Siti supaya berdiam diri dan menjualnya seperti biasa tanpa memaklumkan kecacatan tersebut.",
+                parties: "Siti (Peniaga) & Pembeli Online",
+                location: "Platform E-Dagang / Media Sosial",
+                objective: "Menilai integriti perniagaan dan amanah muamalat berdasarkan tuntutan Hadis Sahih.",
+                evidence: [
+                    {
+                        title: "Petunjuk 01: Kejujuran Jual Beli",
+                        arabic: "الْبَيِّعَانِ بِالْخِيَارِ مَا لَمْ يَتَفَرَّقَا فَإِنْ صَدَقَا وَبَيَّنَا بُورِكَ لَهُمَا فِي بَيْعِهِمَا",
+                        trans: "Dua orang yang berjual beli berhak memilih selagi belum berpisah. Jika kedua-duanya jujur dan menjelaskan kecacatan, diberkati jual beli mereka.",
+                        narrator: "Hakim bin Hizam RA",
+                        imam: "Imam al-Bukhari",
+                        book: "Sahih al-Bukhari",
+                        number: "No. 2079",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 02: Mencegah Penipuan",
+                        arabic: "مَنْ غَشَّنَا فَلَيْسَ مِنَّا",
+                        trans: "Barangsiapa yang menipu kami, maka dia bukanlah daripada golongan kami.",
+                        narrator: "Abu Hurairah RA",
+                        imam: "Imam Muslim",
+                        book: "Sahih Muslim",
+                        number: "No. 102",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 03: Keberkatan Rezeki",
+                        arabic: "إِنَّ الصِّدْقَ يَهْدِي إِلَى الْبِرِّ وَإِنَّ الْبِرَّ يَهْدِي إِلَى الْجَنَّةِ",
+                        trans: "Sesungguhnya kejujuran itu membawa kepada kebaikan dan kebaikan membawa ke syurga.",
+                        narrator: "Abdullah bin Mas'ud RA",
+                        imam: "Imam al-Bukhari",
+                        book: "Sahih al-Bukhari",
+                        number: "No. 6094",
+                        status: "Hadis Sahih"
+                    }
+                ],
+                dilemmaQuestion: "Apakah tindakan yang wajar diambil oleh Siti bagi memastikan muamalatnya diberkati?",
+                options: {
+                    A: {
+                        title: "Menjual pada harga asal tanpa memaklumkan cacat",
+                        desc: "Meneruskan jualan untuk elak kerugian dan berharap pembeli tidak perasan.",
+                        feedback: "SALAH: Menyembunyikan kecacatan produk termasuk dalam unsur penipuan (ghish) yang ditegah keras dalam Sahih Muslim (No. 102) serta menghilangkan keberkatan jual beli."
+                    },
+                    B: {
+                        title: "Menjelaskan kecacatan & menurunkan harga jualan",
+                        desc: "Memaklumkan kecacatan barangan dengan jujur atau memberi diskaun harga.",
+                        feedback: "BETUL! Berterus terang mengenai kekurangan barang menepati sabda Nabi SAW dalam Sahih al-Bukhari (No. 2079) bahawa kejujuran dalam jual beli akan mendatangkan keberkatan."
+                    },
+                    C: {
+                        title: "Menjual kepada pembeli baharu sahaja",
+                        desc: "Menjual barang bermasalah kepada pelanggan luar sahaja.",
+                        feedback: "SALAH: Sikap pilih kasih dan tetap menipu pelanggan baharu tetap haram di sisi syarak kerana menzalimi hak pembeli mendapatkan barang setimpal nilai bayaran."
+                    }
+                },
+                correctAnswer: 'B',
+                hadithAnalysis: {
+                    arabic: "عَنْ أَبِي هُرَيْرَةَ أَنَّ رَسُولَ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: \"مَنْ غَشَّنَا فَلَيْسَ مِنَّا\"",
+                    translation: "Daripada Abu Hurairah RA, bahawasanya Rasulullah SAW bersabda: \"Barangsiapa yang menipu kami, maka dia bukanlah daripada golongan kami.\"",
+                    narrator: "Abu Hurairah RA",
+                    imam: "Imam Muslim",
+                    book: "Sahih Muslim",
+                    number: "No. 102",
+                    status: "Sahih",
+                    keyTeaching: "Mewajibkan sifat berterus terang dan telus dalam transaksi muamalat perniagaan.",
+                    islamicValues: "Siddiq (Kejujuran), Amanah, dan Keberkatan Rezeki Halal.",
+                    realLife: "Menjelaskan keadaan sebenar barangan jualan terpakai atau baharu kepada pembeli."
+                }
+            },
+            3: {
+                title: "CASE FILE #003: Persahabatan & Akhlak Kemasyarakatan",
+                scenario: "Dalam sebuah kumpulan tugasan universiti, timbul perselisihan pendapat antara Hassan dan Luqman sehingga membawa kepada pertengkaran. Hassan mengambil keputusan untuk memulaukan Luqman dan tidak mahu bercakap dengannya lebih daripada tiga hari.",
+                parties: "Hassan & Luqman (Rakan Kumpulan)",
+                location: "Bilik Kuliah / Sembang Kumpulan Projek",
+                objective: "Memahami adab ukhuwah, batasan perselisihan, dan perintah mendamaikan rakan mengikut Hadis.",
+                evidence: [
+                    {
+                        title: "Petunjuk 01: Batasan Pemulauan",
+                        arabic: "لاَ يَحِلُّ لِمُسْلِمٍ أَنْ يَهْجُرَ أَخَاهُ فَوْقَ ثَلاَثِ لَيَالٍ",
+                        trans: "Tidak halal bagi seorang Muslim memulaukan saudaranya lebih daripada tiga malam.",
+                        narrator: "Abu Ayyub al-Ansari RA",
+                        imam: "Imam al-Bukhari",
+                        book: "Sahih al-Bukhari",
+                        number: "No. 6077",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 02: Memulakan Salam",
+                        arabic: "وَخَيْرُهُمَا الَّذِي يَبْدَأُ بِالسَّلاَمِ",
+                        trans: "Dan yang terbaik antara kedua-duanya ialah yang terlebih dahulu memberi salam.",
+                        narrator: "Abu Ayyub al-Ansari RA",
+                        imam: "Imam al-Bukhari",
+                        book: "Sahih al-Bukhari",
+                        number: "No. 6077",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 03: Mendamaikan Pertelingkahan",
+                        arabic: "أَلاَ أُخْبِرُكُمْ بِأَفْضَلَ مِنْ دَرَجَةِ الصِّيَامِ وَالصَّلاَةِ وَالصَّدَقَةِ إِصْلاَحُ ذَاتِ الْبَيْنِ",
+                        trans: "Mahukah aku beritahu perkara yang lebih utama daripada darjat puasa, solat, dan sedekah? Iaitu mendamaikan hubungan.",
+                        narrator: "Abu al-Darda' RA",
+                        imam: "Imam Abu Daud",
+                        book: "Sunan Abi Daud",
+                        number: "No. 4919",
+                        status: "Hadis Sahih"
+                    }
+                ],
+                dilemmaQuestion: "Bagaimanakah Hassan sepatutnya mengendalikan konflik ini mengikut Sunnah Nabi SAW?",
+                options: {
+                    A: {
+                        title: "Terus memulaukan Luqman sehingga projek selesai",
+                        desc: "Mengabaikan Luqman sepanjang semester bagi mengelakkan pertengkaran.",
+                        feedback: "SALAH: Memulaukan saudara sesama Muslim melebihi tempoh tiga hari adalah dilarang secara jelas dalam Sahih al-Bukhari (No. 6077)."
+                    },
+                    B: {
+                        title: "Memulakan salam & berbincang secara profesional",
+                        desc: "Mengetepikan ego, menyapa dahulu, dan menyelesaikan masalah tugasan secara matang.",
+                        feedback: "BETUL! Rasulullah SAW memuji individu yang merendahkan ego dan memulakan salam terlebih dahulu untuk menjernihkan perselisihan."
+                    },
+                    C: {
+                        title: "Keluar daripada kumpulan projek serta-merta",
+                        desc: "Meninggalkan tugas kumpulan dan membiarkan ahli lain berdepan masalah.",
+                        feedback: "KURANG TEPAT: Lari daripada tanggungjawab kumpulan tidak menyelesaikan punca konflik dan menjejaskan amanah kerja berpasukan."
+                    }
+                },
+                correctAnswer: 'B',
+                hadithAnalysis: {
+                    arabic: "عَنْ أَبِي أَيُّوبَ الأَنْصَارِيِّ أَنَّ رَسُولَ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: \"لاَ يَحِلُّ لِرَجُلٍ أَنْ يَهْجُرَ أَخَاهُ فَوْقَ ثَلاَثِ لَيَالٍ\"",
+                    translation: "Daripada Abu Ayyub al-Ansari RA, bahawasanya Rasulullah SAW bersabda: \"Tidak halal bagi seorang lelaki memulaukan saudaranya lebih daripada tiga malam.\"",
+                    narrator: "Abu Ayyub al-Ansari RA",
+                    imam: "Imam al-Bukhari",
+                    book: "Sahih al-Bukhari",
+                    number: "No. 6077",
+                    status: "Sahih",
+                    keyTeaching: "Larangan memutuskan silaturahim serta menggalakkan sifat bertolak-toleransi.",
+                    islamicValues: "Ukhuwah Islamiah, Pemaaf, dan Rendah Diri (Tawadhu').",
+                    realLife: "Menyelesaikan salah faham secara perbincangan terbuka dan tidak menyimpan dendam."
+                }
+            },
+            4: {
+                title: "CASE FILE #004: Integriti Akademik & Amanah Ilmu",
+                scenario: "Farhan menghadapi kesuntukan masa untuk menyiapkan tugasan individu kerana kecemasan keluarga. Rakannya menawarkan fail tugasan yang dibeli daripada 'assignment helper' atas talian untuk ditukar nama sahaja. Farhan berbelah bahagi sama ada mahu meniru demi mendapat markah tinggi atau berterus terang kepada pensyarah.",
+                parties: "Farhan (Pelajar) & Rayyan (Rakan)",
+                location: "Kampus / Servis Tugasan Atas Talian",
+                objective: "Menilai integriti akademik dan menjauhi penipuan ilmiah mengikut petunjuk Hadis Sahih.",
+                evidence: [
+                    {
+                        title: "Petunjuk 01: Keutamaan Kejujuran",
+                        arabic: "إِنَّ الصِّدْقَ يَهْدِي إِلَى الْبِرِّ وَإِنَّ الْبِرَّ يَهْدِي إِلَى الْجَنَّةِ",
+                        trans: "Sesungguhnya kejujuran itu membawa kepada kebaikan dan kebaikan membawa ke syurga.",
+                        narrator: "Abdullah bin Mas'ud RA",
+                        imam: "Imam al-Bukhari",
+                        book: "Sahih al-Bukhari",
+                        number: "No. 6094",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 02: Larangan Penipuan",
+                        arabic: "مَنْ غَشَّنَا فَلَيْسَ مِنَّا",
+                        trans: "Barangsiapa yang menipu kami, maka dia bukanlah daripada golongan kami.",
+                        narrator: "Abu Hurairah RA",
+                        imam: "Imam Muslim",
+                        book: "Sahih Muslim",
+                        number: "No. 102",
+                        status: "Hadis Sahih"
+                    },
+                    {
+                        title: "Petunjuk 03: Menyampaikan Amanah",
+                        arabic: "أَدِّ الأَمَانَةَ إِلَى مَنِ ائْتَمَنَكَ",
+                        trans: "Sampaikanlah amanah kepada orang yang memberi amanah kepadamu.",
+                        narrator: "Abu Hurairah RA",
+                        imam: "Imam Abu Daud",
+                        book: "Sunan Abi Daud",
+                        number: "No. 3535",
+                        status: "Hadis Hasan Sahih"
+                    }
+                ],
+                dilemmaQuestion: "Apakah tindakan paling beretika dan mengikut Sunnah yang patut diambil oleh Farhan?",
+                options: {
+                    A: {
+                        title: "Menggunakan tugasan tiruan & menukar nama",
+                        desc: "Menghantar tugasan rakan demi memastikan markah tinggi dan tidak menjejaskan gred.",
+                        feedback: "SALAH: Menghantar hasil kerja orang lain sebagai milik sendiri adalah penipuan ilmiah (ghish) yang dilarang dalam Sahih Muslim (No. 102)."
+                    },
+                    B: {
+                        title: "Berterus terang & memohon penangguhan jujur",
+                        desc: "Menolak penipuan, berjumpa pensyarah menjelaskan situasi sebenar, dan memohon kelonggaran masa.",
+                        feedback: "BETUL! Kejujuran (siddiq) dan amanah dalam menuntut ilmu membawa keberkatan sebagaimana sabda Nabi SAW dalam Sahih al-Bukhari (No. 6094)."
+                    },
+                    C: {
+                        title: "Meniru sebahagian sahaja tanpa rujukan",
+                        desc: "Menyalin sebahagian perenggan dan menukar ayat tanpa meletakkan sumber asal.",
+                        feedback: "SALAH: Plagiarisme tanpa kredit sumber asal tetap melanggar amanah akademik dan hak cipta penulisan ilmiah."
+                    }
+                },
+                correctAnswer: 'B',
+                hadithAnalysis: {
+                    arabic: "عَنْ أَبِي هُرَيْرَةَ أَنَّ رَسُولَ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: \"مَنْ غَشَّنَا فَلَيْسَ مِنَّا\"",
+                    translation: "Daripada Abu Hurairah RA, bahawasanya Rasulullah SAW bersabda: \"Barangsiapa yang menipu kami, maka dia bukanlah daripada golongan kami.\"",
+                    narrator: "Abu Hurairah RA",
+                    imam: "Imam Muslim",
+                    book: "Sahih Muslim",
+                    number: "No. 102",
+                    status: "Sahih",
+                    keyTeaching: "Mewajibkan integriti dan kejujuran dalam proses pembelajaran dan penulisan akademik.",
+                    islamicValues: "Siddiq (Kejujuran), Amanah Ilmu, dan Bertekun (Itqan).",
+                    realLife: "Menghormati hak cipta, menulis tugasan sendiri, dan jujur dengan pensyarah."
+                }
+            }
+        };
+
+        // Update Progress Tracker & Badges UI
+        function updateProgressAndBadges() {
+            const totalClues = 3;
+            const cluesCount = inspectedClues.size;
+
+            // Update clue counters
+            document.getElementById('clueTrackerText').innerText = `${cluesCount}/${totalClues}`;
+            const evBadge = document.getElementById('evidenceCounterBadge');
+            if (evBadge) {
+                evBadge.innerText = `${cluesCount}/${totalClues} PETUNJUK DITELITI`;
+            }
+
+            // Calculate overall progress % (based on page + clues + solved status)
+            let percent = Math.round(((currentPage - 1) / 7) * 70 + (cluesCount / totalClues) * 20 + (isCaseSolvedCorrectly ? 10 : 0));
+            if (currentPage === 8 && percent < 90) percent = 90;
+            if (percent > 100) percent = 100;
+
+            document.getElementById('progressBarFill').style.width = `${percent}%`;
+            document.getElementById('progressPercentText').innerText = `${percent}%`;
+
+            // Determine highest badge unlocked
+            let highestBadge = "Junior Detective";
+            if (isCaseSolvedCorrectly) {
+                highestBadge = "Case Solver";
+            } else if (cluesCount >= 3) {
+                highestBadge = "Hadith Explorer";
+            }
+
+            document.getElementById('currentBadgeTitle').innerText = highestBadge;
+            document.getElementById('mobileBadgeTitle').innerText = highestBadge;
+
+            // Update Page 8 Badge Cards
+            const explorerCard = document.getElementById('badgeCardExplorer');
+            const explorerStatus = document.getElementById('badgeExplorerStatus');
+            if (cluesCount >= 3 && explorerCard) {
+                explorerCard.className = "p-3 rounded bg-navy-950 border border-gold-500/60 flex items-center gap-3";
+                explorerCard.querySelector('div').className = "w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg shrink-0";
+                explorerCard.querySelector('p').className = "font-bold text-xs text-gold-300";
+                explorerStatus.className = "text-[10px] text-emerald-400";
+                explorerStatus.innerText = "✓ Dibuka (3/3 Bukti Diteliti)";
+            }
+
+            const solverCard = document.getElementById('badgeCardSolver');
+            const solverStatus = document.getElementById('badgeSolverStatus');
+            if (isCaseSolvedCorrectly && solverCard) {
+                solverCard.className = "p-3 rounded bg-navy-950 border border-emerald-500/60 flex items-center gap-3";
+                solverCard.querySelector('div').className = "w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg shrink-0";
+                solverCard.querySelector('p').className = "font-bold text-xs text-emerald-300";
+                solverStatus.className = "text-[10px] text-emerald-400";
+                solverStatus.innerText = "✓ Dibuka (Kes Diselesaikan!)";
+            }
+        }
+
+        // Navigation Controller
+        function navigateToPage(pageNum) {
+            currentPage = pageNum;
+            document.querySelectorAll('.page-screen').forEach(el => el.classList.add('hidden'));
+            const targetPage = document.getElementById(`page-${pageNum}`);
+            if(targetPage) targetPage.classList.remove('hidden');
+
+            const navBtns = document.querySelectorAll('.page-nav-btn');
+            navBtns.forEach((btn, idx) => {
+                if (idx + 1 === pageNum) {
+                    btn.className = "page-nav-btn shrink-0 px-2.5 py-1 rounded bg-gold-500/20 text-gold-300 border border-gold-500/40 text-[11px] font-bold";
+                } else {
+                    btn.className = "page-nav-btn shrink-0 px-2.5 py-1 rounded bg-navy-800/60 hover:bg-navy-800 text-[11px]";
+                }
+            });
+
+            updateProgressAndBadges();
+            playSound('click');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Select Active Case
+        function selectCase(caseId) {
+            selectedCaseId = caseId;
+            inspectedClues.clear();
+            isCaseSolvedCorrectly = false;
+
+            const data = casesData[caseId];
+            if(!data) return;
+
+            // Reset Evidence Card Badges
+            for (let i = 1; i <= 3; i++) {
+                const st = document.getElementById(`statusExhibit${i}`);
+                if (st) {
+                    st.innerText = "BELUM DITELITI";
+                    st.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-300 text-slate-700";
+                }
+            }
+
+            // Page 3 (Case File)
+            document.getElementById('caseFileTitle').innerText = data.title;
+            document.getElementById('caseScenarioText').innerText = data.scenario;
+            document.getElementById('casePartiesText').innerText = data.parties;
+            document.getElementById('caseLocationText').innerText = data.location;
+            document.getElementById('caseObjectiveText').innerText = data.objective;
+
+            // Page 4 (Evidence)
+            document.getElementById('evidenceTitle1').innerText = data.evidence[0].title;
+            document.getElementById('evidenceText1').innerText = `"${data.evidence[0].trans}"`;
+            document.getElementById('evidenceTitle2').innerText = data.evidence[1].title;
+            document.getElementById('evidenceText2').innerText = `"${data.evidence[1].trans}"`;
+            document.getElementById('evidenceTitle3').innerText = data.evidence[2].title;
+            document.getElementById('evidenceText3').innerText = `"${data.evidence[2].trans}"`;
+
+            // Page 5 (Dilemma)
+            document.getElementById('dilemmaQuestionText').innerText = data.dilemmaQuestion;
+            document.getElementById('optionATitle').innerText = `Tindakan A: ${data.options.A.title}`;
+            document.getElementById('optionADesc').innerText = data.options.A.desc;
+            document.getElementById('optionBTitle').innerText = `Tindakan B: ${data.options.B.title}`;
+            document.getElementById('optionBDesc').innerText = data.options.B.desc;
+            document.getElementById('optionCTitle').innerText = `Tindakan C: ${data.options.C.title}`;
+            document.getElementById('optionCDesc').innerText = data.options.C.desc;
+
+            // Page 7 (Hadith Analysis & Metadata)
+            document.getElementById('analysisStatusPill').innerText = `STATUS: HADIS ${data.hadithAnalysis.status.toUpperCase()}`;
+            document.getElementById('analysisArabicText').innerText = data.hadithAnalysis.arabic;
+            document.getElementById('analysisTranslationText').innerText = data.hadithAnalysis.translation;
+            document.getElementById('metaNarrator').innerText = data.hadithAnalysis.narrator;
+            document.getElementById('metaImam').innerText = data.hadithAnalysis.imam;
+            document.getElementById('metaBook').innerText = data.hadithAnalysis.book;
+            document.getElementById('metaNumber').innerText = data.hadithAnalysis.number;
+            document.getElementById('metaStatus').innerText = data.hadithAnalysis.status;
+            document.getElementById('analysisKeyTeaching').innerText = data.hadithAnalysis.keyTeaching;
+            document.getElementById('analysisIslamicValues').innerText = data.hadithAnalysis.islamicValues;
+            document.getElementById('analysisApplication').innerText = data.hadithAnalysis.realLife;
+
+            // Page 8 (Final Learning Summary)
+            document.getElementById('summaryCaseName').innerText = data.title;
+            document.getElementById('summaryCaseOverview').innerText = data.scenario;
+            document.getElementById('summaryHadithArabic').innerText = data.hadithAnalysis.arabic;
+            document.getElementById('summaryHadithText').innerText = data.hadithAnalysis.translation;
+            document.getElementById('summaryHadithFullRef').innerText = `Perawi: ${data.hadithAnalysis.narrator} | Imam: ${data.hadithAnalysis.imam} | Kitab: ${data.hadithAnalysis.book} (${data.hadithAnalysis.number}) | Status: ${data.hadithAnalysis.status}`;
+            document.getElementById('summaryKeyLesson').innerText = data.hadithAnalysis.keyTeaching;
+
+            navigateToPage(3);
+        }
+
+        // Make Decision Logic with Detailed Option Feedback
+        function makeDecision(optionChosen) {
+            const data = casesData[selectedCaseId];
+            const isCorrect = (optionChosen === data.correctAnswer);
+            const chosenObj = data.options[optionChosen];
+
+            isCaseSolvedCorrectly = isCorrect;
+
+            const resultStamp = document.getElementById('resultStamp');
+            const resultHeading = document.getElementById('resultHeading');
+            const chosenOptionBadge = document.getElementById('chosenOptionBadge');
+            const feedbackCardBox = document.getElementById('feedbackCardBox');
+            const resultExplanation = document.getElementById('resultExplanation');
+
+            chosenOptionBadge.innerText = `Pilihan Anda: Tindakan ${optionChosen} (${chosenObj.title})`;
+
+            if(isCorrect) {
+                resultStamp.className = "inline-block font-mono font-black text-base sm:text-lg md:text-xl px-4 sm:px-6 py-2 border-4 border-emerald-700 text-emerald-800 rounded transform -rotate-3 bg-emerald-100";
+                resultStamp.innerText = "ALIGNED WITH SUNNAH";
+                resultHeading.innerText = "KEPUTUSAN SIASATAN TEPAT!";
+                feedbackCardBox.className = "bg-emerald-50 p-4 sm:p-5 rounded border-l-4 border-emerald-600 space-y-2";
+                playSound('success');
+            } else {
+                resultStamp.className = "inline-block font-mono font-black text-base sm:text-lg md:text-xl px-4 sm:px-6 py-2 border-4 border-crimson text-crimson rounded transform rotate-2 bg-red-100";
+                resultStamp.innerText = "MISGUIDED DECISION";
+                resultHeading.innerText = "TINDAKAN KURANG TEPAT";
+                feedbackCardBox.className = "bg-red-50 p-4 sm:p-5 rounded border-l-4 border-crimson space-y-2";
+                playSound('stamp');
+            }
+
+            // Specific feedback explaining WHY the chosen answer is right or wrong
+            resultExplanation.innerText = chosenObj.feedback;
+
+            document.getElementById('resultHadithQuote').innerText = data.hadithAnalysis.arabic;
+            document.getElementById('resultHadithTrans').innerText = data.hadithAnalysis.translation;
+            document.getElementById('resultHadithRefSummary').innerText = `Perawi: ${data.hadithAnalysis.narrator} | Kitab: ${data.hadithAnalysis.book} (${data.hadithAnalysis.number}) | Status: ${data.hadithAnalysis.status}`;
+
+            navigateToPage(6);
+        }
+
+        // Evidence Inspector Modal (Updates Progress Tracker & Reference Metadata)
+        function inspectEvidence(index) {
+            const data = casesData[selectedCaseId].evidence[index - 1];
+            inspectedClues.add(index);
+
+            const st = document.getElementById(`statusExhibit${index}`);
+            if (st) {
+                st.innerText = "✓ DITELITI";
+                st.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-700 text-white";
+            }
+
+            document.getElementById('modalExhibitTag').innerText = `EXHIBIT 0${index}`;
+            document.getElementById('modalExhibitTitle').innerText = data.title;
+            document.getElementById('modalExhibitArabic').innerText = data.arabic;
+            document.getElementById('modalExhibitTranslation').innerText = `"${data.trans}"`;
+
+            // Populate detailed Hadith reference fields
+            document.getElementById('modalRefNarrator').innerText = data.narrator || "Abu Hurairah RA";
+            document.getElementById('modalRefImam').innerText = data.imam || "Imam al-Bukhari / Muslim";
+            document.getElementById('modalRefBook').innerText = data.book || "Sahihain";
+            document.getElementById('modalRefNumber').innerText = data.number || "-";
+            document.getElementById('modalRefStatus').innerText = data.status || "Hadis Sahih";
+
+            document.getElementById('evidenceModal').classList.remove('hidden');
+            updateProgressAndBadges();
+            playSound('click');
+        }
+
+        function closeEvidenceModal() {
+            document.getElementById('evidenceModal').classList.add('hidden');
+        }
+
+        // Question Builder Modal Logic
+        function openQuestionBuilderModal() {
+            document.getElementById('questionBuilderModal').classList.remove('hidden');
+            playSound('click');
+        }
+
+        function closeQuestionBuilderModal() {
+            document.getElementById('questionBuilderModal').classList.add('hidden');
+        }
+
+        function handleSaveCustomCase(e) {
+            e.preventDefault();
+            const newId = Object.keys(casesData).length + 1;
+            const title = document.getElementById('builderCaseTitle').value;
+            const scenario = document.getElementById('builderCaseScenario').value;
+            const optA = document.getElementById('builderOptionA').value;
+            const optB = document.getElementById('builderOptionB').value;
+            const optC = document.getElementById('builderOptionC').value;
+            const arabic = document.getElementById('builderHadithArabic').value;
+            const trans = document.getElementById('builderHadithTrans').value;
+
+            casesData[newId] = {
+                title: title,
+                scenario: scenario,
+                parties: "Pihak Terlibat Kustom",
+                location: "Situasi Realistik",
+                objective: "Pengajaran kes baharu yang direka oleh pengajar.",
+                evidence: [
+                    { title: "Bukti 1", arabic: arabic || "تَكَلَّمْ بِخَيْرٍ أَوْ اصْمُتْ", trans: trans || "Berkata baik atau diam.", narrator: "Abu Hurairah RA", imam: "Imam al-Bukhari", book: "Sahih al-Bukhari", number: "No. 6018", status: "Hadis Sahih" },
+                    { title: "Bukti 2", arabic: arabic || "تَكَلَّمْ بِخَيْرٍ أَوْ اصْمُتْ", trans: trans || "Berkata baik atau diam.", narrator: "Abu Hurairah RA", imam: "Imam al-Bukhari", book: "Sahih al-Bukhari", number: "No. 6018", status: "Hadis Sahih" },
+                    { title: "Bukti 3", arabic: arabic || "تَكَلَّمْ بِخَيْرٍ أَوْ اصْمُتْ", trans: trans || "Berkata baik atau diam.", narrator: "Abu Hurairah RA", imam: "Imam al-Bukhari", book: "Sahih al-Bukhari", number: "No. 6018", status: "Hadis Sahih" }
+                ],
+                dilemmaQuestion: "Apakah tindakan paling beretika bagi kes ini?",
+                options: {
+                    A: { title: optA, desc: "Pilihan jawapan A", feedback: "SALAH: Pilihan ini bercanggah dengan prinsip etika Hadis dalam kes ini." },
+                    B: { title: optB, desc: "Pilihan jawapan B (Sunnah Aligned)", feedback: "BETUL! Tindakan ini selari dengan petunjuk Hadis yang dikemukakan." },
+                    C: { title: optC, desc: "Pilihan jawapan C", feedback: "KURANG TEPAT: Pilihan ini tidak menyelesaikan isu secara berhikmah." }
+                },
+                correctAnswer: 'B',
+                hadithAnalysis: {
+                    arabic: arabic || "تَكَلَّمْ بِخَيْرٍ أَوْ اصْمُتْ",
+                    translation: trans || "Pengajaran Hadis.",
+                    narrator: "Sahabat RA",
+                    imam: "Imam Hadis",
+                    book: "Kitab Muktabar",
+                    number: "-",
+                    status: "Sahih",
+                    keyTeaching: "Pengajaran utama kes ini.",
+                    islamicValues: "Amanah & Kejujuran.",
+                    realLife: "Aplikasi kehidupan seharian."
+                }
+            };
+
+            alert(`Kes Baharu #${newId} berjaya ditambah ke dalam sistem!`);
+            closeQuestionBuilderModal();
+            selectCase(newId);
+        }
+
+        // Generate Print PDF Report (Includes Final Learning Summary & Badges)
+        function generatePDFReport() {
+            const studentName = document.getElementById('studentNames').value || "Pelajar Hadith Detective";
+            const inst = document.getElementById('institutionCode').value || "Universiti / Institusi";
+            const reflection = document.getElementById('finalReflectionText').value || "Tiada refleksi ditulis.";
+            const data = casesData[selectedCaseId];
+            const highestBadge = document.getElementById('currentBadgeTitle').innerText;
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>SIJIL & RUMUSAN HADITH DETECTIVE</title>
+                    <style>
+                        body { font-family: serif; padding: 30px; color: #0a192f; }
+                        .border-box { border: 5px double #c5a059; padding: 25px; }
+                        h1 { text-align: center; color: #0a192f; margin-bottom: 5px; }
+                        p, li { font-size: 13px; line-height: 1.6; }
+                        .stamp { border: 2px solid green; color: green; padding: 4px 12px; display: inline-block; font-weight: bold; }
+                        .box { background: #f5f2eb; padding: 12px; border-left: 4px solid #c5a059; margin-bottom: 12px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="border-box">
+                        <h1>HADITH DETECTIVE: FINAL LEARNING SUMMARY</h1>
+                        <p style="text-align:center;"><em>Investigate. Understand. Apply.</em></p>
+                        <hr>
+                        <p><strong>NAMA PELAJAR / KUMPULAN:</strong> ${studentName}</p>
+                        <p><strong>INSTITUSI / KURSUS:</strong> ${inst}</p>
+                        <p><strong>LENCANA TERTINGGI DIPEROLEH:</strong> ${highestBadge} | <strong>STATUS:</strong> <span class="stamp">CASE CLOSED</span></p>
+                        <hr>
+                        <h4>1. RINGKASAN KES (${data.title}):</h4>
+                        <div class="box">${data.scenario}</div>
+                        <h4>2. HADIS YANG DIPELAJARI:</h4>
+                        <div class="box">
+                            <p style="text-align:right; font-size:16px;"><strong>${data.hadithAnalysis.arabic}</strong></p>
+                            <p><em>${data.hadithAnalysis.translation}</em></p>
+                            <p><strong>Rujukan:</strong> Perawi: ${data.hadithAnalysis.narrator} | Kitab: ${data.hadithAnalysis.book} (${data.hadithAnalysis.number}) | Status: ${data.hadithAnalysis.status}</p>
+                        </div>
+                        <h4>3. PENGAJARAN UTAMA:</h4>
+                        <div class="box">${data.hadithAnalysis.keyTeaching}</div>
+                        <h4>4. REFLEKSI PELAJAR:</h4>
+                        <div class="box">"${reflection}"</div>
+                        <p style="text-align:right;">Tarikh Serahan: ${new Date().toLocaleDateString('ms-MY')}</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Web Audio Synthesizer SFX
+        function playSound(type) {
+            if(!soundEnabled) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if(type === 'click') {
+                    osc.frequency.setValueAtTime(400, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+                } else if(type === 'stamp') {
+                    osc.frequency.setValueAtTime(150, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.15);
+                } else if(type === 'success') {
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.2);
+                }
+            } catch(e) {}
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('audioIcon').className = soundEnabled ? "fa-solid fa-volume-high text-gold-400" : "fa-solid fa-volume-xmark text-slate-500";
+        }
+
+        // Google Apps Script Integration (Preserved)
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOhs2fivkbzVm0ZkPU2-3lzcYhizMPKrfuT3-duxVtDW9jW8YeIjY1-hK5cdq8DYI8/exec';
+
+        async function sendDataToGoogleSheet() {
+            const btn = document.getElementById('btnSubmitRecord');
+            const nameInput = document.getElementById('studentNames');
+            const instInput = document.getElementById('institutionCode');
+            const reflInput = document.getElementById('finalReflectionText');
+
+            const studentName = nameInput ? nameInput.value.trim() : '';
+            const institution = instInput ? instInput.value.trim() : '-';
+            const reflection = reflInput ? reflInput.value.trim() : '';
+            const highestBadge = document.getElementById('currentBadgeTitle').innerText;
+            const caseTitle = (typeof casesData !== 'undefined' && typeof selectedCaseId !== 'undefined' && casesData[selectedCaseId]) 
+                              ? `${casesData[selectedCaseId].title} [Badge: ${highestBadge} | Petunjuk: ${inspectedClues.size}/3]`
+                              : "Kes Siasatan";
+
+            if (!studentName) {
+                alert("Sila masukkan Nama Pelajar / Kumpulan di Halaman 1 terlebih dahulu!");
+                navigateToPage(1);
+                return;
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-gold-400"></i> <span class="text-xs font-bold">Sedang Menghantar...</span>';
+            }
+
+            const formData = new URLSearchParams();
+            formData.append('studentName', studentName);
+            formData.append('institution', institution);
+            formData.append('caseTitle', caseTitle);
+            formData.append('reflection', reflection);
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                playSound('success');
+                alert("✅ Rekod siasatan & pencapaian lencana anda berjaya dihantar!");
+        
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-xs font-bold text-emerald-400">REKOD BERJAYA DIHANTAR</span>';
+                    btn.className = "w-full bg-emerald-950 border border-emerald-500/50 p-4 rounded-md flex items-center justify-center gap-3";
+                }
+            } catch (error) {
+                console.error(error);
+                alert("❌ Ralat penghantaran. Sila semak sambungan internet anda.");
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane text-lg text-gold-400"></i> <div class="text-left"><p class="font-bold text-xs">CUBA HANTAR LAGI</p></div>';
+                }
+            }
+        }
+
+        // Initialize First Case Load on Cover Page
+        document.addEventListener('DOMContentLoaded', () => {
+            selectCase(1);
+            navigateToPage(1);
+        });
+    </script>
+
+</body>
+</html>
