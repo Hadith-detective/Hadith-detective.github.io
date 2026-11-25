@@ -1634,11 +1634,19 @@
                             width: 100%;
                             margin-bottom: 15px;
                         }
-                        .header-logos img {
-                            height: 95px;
+                        .logo-usim {
+                            height: 110px;
                             width: auto;
-                            max-width: 210px;
+                            max-width: 260px;
                             object-fit: contain;
+                            mix-blend-mode: multiply;
+                        }
+                        .logo-hd {
+                            height: 85px;
+                            width: auto;
+                            max-width: 180px;
+                            object-fit: contain;
+                            mix-blend-mode: multiply;
                         }
                         .cert-title {
                             font-size: 38px;
@@ -1773,8 +1781,8 @@
                             <div>
                                 <!-- Penjuru Kiri: Logo USIM | Penjuru Kanan: Logo Hadith Detective -->
                                 <div class="header-logos">
-                                    <img src="${baseUrl}logo-usim.png" alt="Logo USIM" onerror="this.style.visibility='hidden'">
-                                    <img src="${baseUrl}logo-hd.png" alt="Logo Hadith Detective" onerror="this.style.visibility='hidden'">
+                                    <img class="logo-usim" src="${baseUrl}logo-usim.png" alt="Logo USIM" onerror="this.style.visibility='hidden'">
+                                    <img class="logo-hd" src="${baseUrl}logo-hd.png" alt="Logo Hadith Detective" onerror="this.style.visibility='hidden'">
                                 </div>
 
                                 <div class="cert-subtitle">Program Pembelajaran Interaktif Fiqh & Hadith</div>
@@ -1817,6 +1825,41 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- MUKA SURAT 2: LAMPIRAN RUMUSAN & REFLEKSI -->
+                    <div class="report-page">
+                        <h2>LAMPIRAN RUMUSAN PEMBELAJARAN</h2>
+                        <p><strong>NAMA PELAJAR / KUMPULAN:</strong> ${studentName}</p>
+                        <p><strong>INSTITUSI / KURSUS:</strong> ${inst}</p>
+                        <p><strong>LENCANA TERTINGGI:</strong> ${highestBadge} | <strong>STATUS:</strong> <span class="stamp">CASE CLOSED</span></p>
+                        <hr>
+                        <h4>1. RINGKASAN KES (${data.title}):</h4>
+                        <div class="box"><p>${data.scenario}</p></div>
+                        <h4>2. HADIS YANG DIPELAJARI:</h4>
+                        <div class="box">
+                            <p style="text-align:right; font-size:17px;"><strong>${data.hadithAnalysis.arabic}</strong></p>
+                            <p><em>${data.hadithAnalysis.translation}</em></p>
+                            <p><strong>Rujukan:</strong> Perawi: ${data.hadithAnalysis.narrator} | Kitab: ${data.hadithAnalysis.book} (${data.hadithAnalysis.number}) | Status: ${data.hadithAnalysis.status}</p>
+                        </div>
+                        <h4>3. PENGAJARAN UTAMA:</h4>
+                        <div class="box"><p>${data.hadithAnalysis.keyTeaching}</p></div>
+                        <h4>4. REFLEKSI PELAJAR:</h4>
+                        <div class="box"><p>"${reflection}"</p></div>
+                        <p style="text-align:right; font-size: 12px;">Tarikh Serahan: ${currentDate}</p>
+                    </div>
+
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
 
                     <!-- MUKA SURAT 2: LAMPIRAN RUMUSAN & REFLEKSI -->
                     <div class="report-page">
